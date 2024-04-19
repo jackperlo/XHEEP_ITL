@@ -25,41 +25,33 @@ def load_model(path):
 
 def int8_to_binary(num):
   """
-  Convert a int8 number to its binary representation according to the IEEE-754 standard.
+  Convert a int8(:np.ndarray) number to its binary representation according to the IEEE-754 standard.
   
   Args: 
     the number to convert.
 
   Returns: 
-    a string containing the binary representation.
+    a string containing the 32-bit binary representation.
   """
   if isinstance(num, np.ndarray):
-    # If num is a NumPy array, apply the function element-wise
-    binary_strings = [bin(x & 0xFF)[2:].zfill(8) for x in num.flatten()]
+    # If num is a NumPy array, convert to bin maintaining the sign
+    binary_strings = []
+    for x in num.flatten():
+      binary_rep = bin(x & 0xFF)[2:]
+      # Sign extension
+      if (x < 0): # Negative values
+        sign_extended = '1' * (32-len(binary_rep))
+        sign_extended+=binary_rep
+        binary_strings.append(sign_extended)
+      else: # Positive values
+        sign_extended = '0' * (32-len(binary_rep))
+        sign_extended+=binary_rep
+        binary_strings.append(sign_extended)
   else:
-    # If num is an integer, convert it to binary and pad with zeros
-    binary_strings = bin(num & 0xFF)[2:].zfill(8)
+    print("Error: while trying to convert an int8 to binary; the int is not an instance of np.ndarray")
+    exit(-1)
 
   return binary_strings
-
-def int8_to_hex(num):
-  """
-  Convert a int8 number to its hexadecimal representation according to the IEEE-754 standard.
-  
-  Args:
-    the number to convert.
-  
-  Returns:
-    a string containing the hexadecimal representation.
-  """
-  if isinstance(num, np.ndarray):
-    # If num is a NumPy array, apply the function element-wise
-    hex_strings = [hex(x)[2:].zfill(2).upper() for x in num.flatten()]
-  else:
-    # If num is an integer, convert it to hexadecimal and pad with zeros
-    hex_strings = hex(num)[2:].zfill(2).upper()
-
-  return hex_strings
 
 def create_output_directory(weight_format):
   """
@@ -80,7 +72,7 @@ def arg_parse():
   """
   parser = argparse.ArgumentParser(description='Create a list of all the weights of a pre-trained model.')
   parser.add_argument('--model', help='CNN model to use. Default: lenet5', choices=MODELS.keys(), default="lenet5")
-  parser.add_argument('--weight_format', help='The output weight format', type=str, choices=['binary', 'int8', 'hex'], default="binary")
+  parser.add_argument('--weight_format', help='The output weight format', type=str, choices=['binary', 'int8'], default="binary")
   parsed_args = parser.parse_args()
 
   return parsed_args
