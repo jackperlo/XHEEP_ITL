@@ -3,7 +3,6 @@ import numpy as np
 
 from constants import WEIGHTS_OUTPUT_PATH
 from utils import int8_to_binary
-from utils import int8_to_hex
 
 def save2file_model_weights(weight_format, model, network, target_layers):
   """
@@ -27,15 +26,18 @@ def save2file_model_weights(weight_format, model, network, target_layers):
           conversion_function = np.int8
         elif weight_format == 'binary':
           conversion_function = int8_to_binary
-        elif weight_format == 'hex':
-          conversion_function = int8_to_hex
         else:
           print('ERROR: Invalid output format for model weights')
           exit(-1)
 
         converted_weights = conversion_function(weight)
+        i=0
         for converted_weight in converted_weights:
-          output_file.write(f'{converted_weight}\n')
+          if i < len(converted_weights)*len(weights)-1:
+            output_file.write(f'{converted_weight}\n')
+          else:
+            output_file.write(f'{converted_weight}')
+          i+=1
 
 def get_layers_weights(model: tf.lite.Interpreter, network, target_layers):
   """

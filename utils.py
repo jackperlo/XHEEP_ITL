@@ -5,6 +5,7 @@ import os
 
 from constants import WEIGHTS_OUTPUT_PATH
 from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
+from constants import ATPG_SCRIPTS_OUTPUT_PATH
 from constants import MODELS
 
 def load_model(path):
@@ -62,6 +63,7 @@ def create_output_directory(weight_format):
   """
   os.makedirs(WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/", exist_ok=True)
   os.makedirs(INPUT_WEIGHT_PAIR_OUTPUT_PATH, exist_ok=True)
+  os.makedirs(ATPG_SCRIPTS_OUTPUT_PATH, exist_ok=True)
 
 def arg_parse():
   """
@@ -70,9 +72,21 @@ def arg_parse():
   Returns:
     returns all the passed arguments(if any), assigning the default ones to the arguments not provided. 
   """
-  parser = argparse.ArgumentParser(description='Create a list of all the weights of a pre-trained model.')
+  parser = argparse.ArgumentParser(description='Create a list of all the weights, the (input, weight) pairs, atpg scripts of a pre-trained model.')
+  
+  # argument used to specify the used pre-trained model
   parser.add_argument('--model', help='CNN model to use. Default: lenet5', choices=MODELS.keys(), default="lenet5")
-  parser.add_argument('--weight_format', help='The output weight format', type=str, choices=['binary', 'int8'], default="binary")
+
+  # arguments related to read and save weights from the run time model
+  parser.add_argument('--save_weights', action='store_true', help='If this parameter is specified, then the execution will read and save the weights of the specified layer(s)')
+  parser.add_argument('--weight_format', help='The output weight format. Default: binary', type=str, choices=['binary', 'int8'], default="binary")
+
+  # argument related to read and save (input, weight) pairs from the run time model
+  parser.add_argument('--save_pairs', action='store_true', help='If this parameter is specified, then the execution will read and save the (input, weight) pairs of the specified layer(s)')
+
+  # argument related to generate atpg_scripts
+  parser.add_argument('--generate_atpg_scripts', action='store_true', help='If this parameter is specified, then the execution will generate the atpg scripts')
+
   parsed_args = parser.parse_args()
 
   return parsed_args

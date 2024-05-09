@@ -19,7 +19,6 @@ def save2file_model_input_weight_pairs(model, network, target_layers):
     file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+layer+"_input_weight_pairs.txt"
     with(open(file_name, 'w')) as output_file:
       json.dump(input_weight_pairs, output_file, indent=2)
-      #output_file.write(f'{input_weight_pairs}\n')
 
 def get_layers_input_weight_pairs(model: tf.lite.Interpreter, network, target_layers):
   """
