@@ -6,8 +6,7 @@ pattern_file="./outputs/atpg_patterns_gathered/patterns.txt"
 > $pattern_file
 
 # total iterations can be retreived by multiplying (n_channels_out*height*width*n_filters)
-#5*5*5*1
-total_iterations=2
+total_iterations=5*5*5*1
 
 # variables used to calculate the atpg script file name
 n_channels_out=0
