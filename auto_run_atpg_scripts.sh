@@ -20,15 +20,15 @@ do
   if [ $i -lt 5 ]; then
     width=$i
   else
-      width=$(($i % 5))
-      i=$(($i / 5))
-      if [ $i -ge 5 ]; then
-          height=$(($i % 5))
-          n_channels_out=$(($i / 5))
-      else
-          height=$i
-          n_channels_out=0
-      fi
+    width=$(($i % 5))
+    i=$(($i / 5))
+    if [ $i -ge 5 ]; then
+      height=$(($i % 5))
+      n_channels_out=$(($i / 5))
+    else
+      height=$i
+      n_channels_out=0
+    fi
   fi
 
   echo "Execution of script: weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
