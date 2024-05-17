@@ -39,7 +39,7 @@ do
   # check for script existance
   if [ -f "$script_file" ]; then
     # run the script
-    max -shell "$script_file"
+    tmax -shell "$script_file"
 
     # retrieve the _pi pattern (only the 32 bits of the input) from the mul_patterns and enqueue it in the patterns.txt file
     pattern=$(awk '/"_pi"=/ {if (match($0, /"_pi"=([01]{64})[01]*/)) {print substr($0, RSTART+45, 32); exit}}' mul_patterns.txt | tr -d ';')

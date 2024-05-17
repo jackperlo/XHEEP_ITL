@@ -33,7 +33,7 @@ def write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight):
   #op_a_i: input constrained bits
   #op_b_i: weight constrained bits
   content = [
-    "coset_environment_viewer -instance_names",
+    "set_environment_viewer -instance_names",
     "set_messages -log tmax_unconstrained.log -replace",
     "read_netlist ./syn/out/cve2_multdiv_fast.v",
     "read_netlist ./syn/techlib/NangateOpenCellLibrary.v",
