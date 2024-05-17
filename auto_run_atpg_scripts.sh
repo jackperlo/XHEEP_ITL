@@ -1,7 +1,9 @@
 #!/bin/bash
 
-scripts_folder="./outputs/atpg_scripts"
-pattern_file="./outputs/atpg_patterns_gathered/patterns.txt"
+# THIS SCRIPT IS MEANT TO BE LAUNCHED FROM THE RISCV_MUL FOLDER
+
+scripts_folder="../xheep_itl/outputs/atpg_scripts"
+pattern_file="../xheep_itl/outputs/atpg_patterns_gathered/patterns.txt"
 # clean up the pattern file 
 > $pattern_file
 
@@ -37,16 +39,19 @@ do
   # check for script existance
   if [ -f "$script_file" ]; then
     # run the script
-    bash "$script_file"
+    max -shell "$script_file"
 
     # retrieve the _pi pattern (only the 32 bits of the input) from the mul_patterns and enqueue it in the patterns.txt file
-    pattern=$(awk '/"_pi"=/ {match($0, /"_pi"=([01]{64})[01]*/); print substr($0, RSTART+45, RLENGTH-2)}' mul_patterns.txt | tr -d ';')
+    pattern=$(awk '/"_pi"=/ {if (match($0, /"_pi"=([01]{64})[01]*/)) {print substr($0, RSTART+45, 32); exit}}' mul_patterns.txt | tr -d ';')
     # remove the double carriage return which comes out from the awk command 
     pattern=${pattern#"${pattern%%[![:space:]]*}"}
     pattern=${pattern#"${pattern%%[![:space:]]*}"}
+    # quit from atpg console
+    echo -ne 'quit\n' 
     echo "pattern_${n_channels_out}_${height}_${width}_${n_filters} : ${pattern}" >> "${pattern_file}"
 
     echo "pattern_${n_channels_out}_${height}_${width}_${n_filters} saved correctly"
+    
   else
     echo "ATPG script file not found: $script_file. Skipping this file."
   fi
