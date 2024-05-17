@@ -70,3 +70,4 @@ run_atpg -auto
 write_patterns mul_patterns.txt -format stil -internal -replace
 write_faults ./flist.txt -replace -all
 report_summaries > ./summaries.txt
+quit

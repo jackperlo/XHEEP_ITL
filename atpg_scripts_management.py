@@ -79,6 +79,7 @@ def write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight):
   content.append("write_patterns mul_patterns.txt -format stil -internal -replace")
   content.append("write_faults ./flist.txt -replace -all")
   content.append("report_summaries > ./summaries.txt")
+  content.append("quit")
   
   return content
 
