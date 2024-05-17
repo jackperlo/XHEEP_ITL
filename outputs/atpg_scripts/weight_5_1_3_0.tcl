@@ -1,4 +1,4 @@
-coset_environment_viewer -instance_names
+set_environment_viewer -instance_names
 set_messages -log tmax_unconstrained.log -replace
 read_netlist ./syn/out/cve2_multdiv_fast.v
 read_netlist ./syn/techlib/NangateOpenCellLibrary.v
