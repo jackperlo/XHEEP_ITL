@@ -2,8 +2,8 @@
 
 # THIS SCRIPT IS MEANT TO BE LAUNCHED FROM THE RISCV_MUL FOLDER
 
-scripts_folder="../xheep_itl/outputs/atpg_scripts"
-pattern_file="../xheep_itl/outputs/atpg_patterns_gathered/patterns.txt"
+scripts_folder="../XHEEP_ITL/outputs/atpg_scripts"
+pattern_file="../XHEEP_ITL/outputs/atpg_patterns_gathered/patterns.txt"
 # clean up the pattern file 
 > $pattern_file
 
