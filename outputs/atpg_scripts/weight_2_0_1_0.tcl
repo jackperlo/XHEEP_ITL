@@ -64,7 +64,7 @@ add_pi_constraints 1 { signed_mode_i[0] signed_mode_i[1] }
 add_po_masks valid_o
 run_drc
 read_faults ./flist.txt -maintain_detection
-set_atpg -merge high
+set_atpg -merge high -abort_limit 100 -patterns 1
 set_faults -model stuck
 run_atpg -auto
 write_patterns mul_patterns.txt -format stil -internal -replace
