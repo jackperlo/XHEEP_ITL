@@ -30,44 +30,44 @@ def write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight):
     Returns:
       a list of the commands to be injected into the .tcl file
   """
-  #op_a_i: input constrained bits
-  #op_b_i: weight constrained bits
+  #op_b_i: input constrained bits
+  #op_a_i: weight constrained bits
   content = [
     "set_environment_viewer -instance_names",
     "set_messages -log tmax_unconstrained.log -replace",
     "read_netlist ./syn/out/cve2_multdiv_fast.v",
     "read_netlist ./syn/techlib/NangateOpenCellLibrary.v",
     "run_build_model cve2_multdiv_fast_RV32M3",
-    "add_pi_constraints 0 op_a_i[31]",
-    "add_pi_constraints 0 op_a_i[30]",
-    "add_pi_constraints 0 op_a_i[29]",
-    "add_pi_constraints 0 op_a_i[28]",
-    "add_pi_constraints 0 op_a_i[27]",
-    "add_pi_constraints 0 op_a_i[26]",
-    "add_pi_constraints 0 op_a_i[25]",
-    "add_pi_constraints 0 op_a_i[24]",
-    "add_pi_constraints 0 op_a_i[23]",
-    "add_pi_constraints 0 op_a_i[22]",
-    "add_pi_constraints 0 op_a_i[21]",
-    "add_pi_constraints 0 op_a_i[20]",
-    "add_pi_constraints 0 op_a_i[19]",
-    "add_pi_constraints 0 op_a_i[18]",
-    "add_pi_constraints 0 op_a_i[17]",
-    "add_pi_constraints 0 op_a_i[16]",
-    "add_pi_constraints 0 op_a_i[15]",
-    "add_pi_constraints 0 op_a_i[14]",
-    "add_pi_constraints 0 op_a_i[13]",
-    "add_pi_constraints 0 op_a_i[12]",
-    "add_pi_constraints 0 op_a_i[11]",
-    "add_pi_constraints 0 op_a_i[10]",
-    "add_pi_constraints 0 op_a_i[9]",
-    "add_pi_constraints 0 op_a_i[8]",
-    "add_pi_constraints 0 op_a_i[7]"
+    "add_pi_constraints 0 op_b_i[31]",
+    "add_pi_constraints 0 op_b_i[30]",
+    "add_pi_constraints 0 op_b_i[29]",
+    "add_pi_constraints 0 op_b_i[28]",
+    "add_pi_constraints 0 op_b_i[27]",
+    "add_pi_constraints 0 op_b_i[26]",
+    "add_pi_constraints 0 op_b_i[25]",
+    "add_pi_constraints 0 op_b_i[24]",
+    "add_pi_constraints 0 op_b_i[23]",
+    "add_pi_constraints 0 op_b_i[22]",
+    "add_pi_constraints 0 op_b_i[21]",
+    "add_pi_constraints 0 op_b_i[20]",
+    "add_pi_constraints 0 op_b_i[19]",
+    "add_pi_constraints 0 op_b_i[18]",
+    "add_pi_constraints 0 op_b_i[17]",
+    "add_pi_constraints 0 op_b_i[16]",
+    "add_pi_constraints 0 op_b_i[15]",
+    "add_pi_constraints 0 op_b_i[14]",
+    "add_pi_constraints 0 op_b_i[13]",
+    "add_pi_constraints 0 op_b_i[12]",
+    "add_pi_constraints 0 op_b_i[11]",
+    "add_pi_constraints 0 op_b_i[10]",
+    "add_pi_constraints 0 op_b_i[9]",
+    "add_pi_constraints 0 op_b_i[8]",
+    "add_pi_constraints 0 op_b_i[7]"
   ]
   i=31
   for bit in weight:
     if bit != '\n': # omit the last symbol in "weight" which is the carriage return
-      content.append("add_pi_constraints "+bit+" op_b_i["+str(i)+"]")
+      content.append("add_pi_constraints "+bit+" op_a_i["+str(i)+"]")
       i-=1
   content.append("add_pi_constraints 1 { signed_mode_i[0] signed_mode_i[1] }")
   content.append("add_po_masks valid_o")

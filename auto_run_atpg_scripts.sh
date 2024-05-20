@@ -4,7 +4,7 @@
 
 scripts_folder="../XHEEP_ITL/outputs/atpg_scripts"
 pattern_file="../XHEEP_ITL/outputs/atpg_patterns_gathered/patterns.txt"
-# clean up the pattern file 
+# clean up the pattern file and the fault list file
 > $pattern_file
 
 # total iterations can be retreived by multiplying (n_channels_out*height*width*n_filters)
@@ -15,6 +15,7 @@ n_channels_out=0
 height=0
 width=0
 n_filters=0
+new_i=0
 
 for ((i=0; i<$total_iterations; i++))
 do
@@ -23,12 +24,12 @@ do
     width=$i
   else
     width=$(($i % 5))
-    i=$(($i / 5))
+    new_i=$(($i / 5))
     if [ $i -ge 5 ]; then
-      height=$(($i % 5))
-      n_channels_out=$(($i / 5))
+      height=$(($new_i % 5))
+      n_channels_out=$(($new_i / 5))
     else
-      height=$i
+      height=$new_i
       n_channels_out=0
     fi
   fi
