@@ -34,26 +34,39 @@ do
     fi
   fi
 
-  echo "Execution of script: weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
+  for j in 0 1
+  do
+    if [ $j -eq 0 ]; then
+      echo "Execution of script: positive_input_weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
+      script_file="$scripts_folder/positive_input_weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
+    else 
+      echo "Execution of script: negative_input_weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
+      script_file="$scripts_folder/negative_input_weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
+    fi
 
-  script_file="$scripts_folder/weight_${n_channels_out}_${height}_${width}_${n_filters}.tcl"
-  # check for script existance
-  if [ -f "$script_file" ]; then
-    # run the script
-    tmax -shell "$script_file"
+    # check for script existance
+    if [ -f "$script_file" ]; then
+      # run the script
+      tmax -shell "$script_file"
 
-    # retrieve the _pi pattern (only the 32 bits of the input) from the mul_patterns and enqueue it in the patterns.txt file
-    pattern=$(awk '/"_pi"=/ {if (match($0, /"_pi"=([01]{64})[01]*/)) {print substr($0, RSTART+45, 32); exit}}' mul_patterns.txt | tr -d ';')
-    # remove the double carriage return which comes out from the awk command 
-    pattern=${pattern#"${pattern%%[![:space:]]*}"}
-    pattern=${pattern#"${pattern%%[![:space:]]*}"}
-    # quit from atpg console
-    echo -ne 'quit\n' 
-    echo "pattern_${n_channels_out}_${height}_${width}_${n_filters} : ${pattern}" >> "${pattern_file}"
-
-    echo "pattern_${n_channels_out}_${height}_${width}_${n_filters} saved correctly"
-    
-  else
-    echo "ATPG script file not found: $script_file. Skipping this file."
-  fi
+      # retrieve the _pi pattern (only the 32 bits of the input) from the mul_patterns and enqueue it in the patterns.txt file
+      pattern=$(awk '/"_pi"=/ {if (match($0, /"_pi"=([01]{64})[01]*/)) {print substr($0, RSTART+45, 32); exit}}' mul_patterns.txt | tr -d ';')
+      # remove the double carriage return which comes out from the awk command 
+      pattern=${pattern#"${pattern%%[![:space:]]*}"}
+      pattern=${pattern#"${pattern%%[![:space:]]*}"}
+      # quit from atpg console
+      echo -ne 'quit\n' 
+      if [ $j -eq 0 ]; then
+        echo "positive_input_pattern_${n_channels_out}_${height}_${width}_${n_filters} : ${pattern}" >> "${pattern_file}"
+        echo "positive_input_pattern_${n_channels_out}_${height}_${width}_${n_filters} saved correctly"
+      else 
+        echo "negative_input_pattern_${n_channels_out}_${height}_${width}_${n_filters} : ${pattern}" >> "${pattern_file}"
+        echo "negative_input_pattern_${n_channels_out}_${height}_${width}_${n_filters} saved correctly"
+      fi
+      
+      
+    else
+      echo "ATPG script file not found: $script_file. Skipping this file."
+    fi
+  done
 done
