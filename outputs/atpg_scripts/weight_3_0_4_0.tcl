@@ -63,10 +63,10 @@ add_pi_constraints 0 op_a_i[0]
 add_pi_constraints 1 { signed_mode_i[0] signed_mode_i[1] }
 add_po_masks valid_o
 run_drc
-read_faults ./flist.txt -maintain_detection
+read_faults ./flist.txt -add -force_retain_code
 set_atpg -merge high -abort_limit 100 -patterns 1
 set_faults -model stuck
-run_atpg -auto
+run_atpg -ndetects 1 -auto_compression
 write_patterns mul_patterns.txt -format stil -internal -replace
 write_faults ./flist.txt -replace -all
 report_summaries > ./summaries.txt
