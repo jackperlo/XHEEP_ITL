@@ -73,7 +73,7 @@ def write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight):
   content.append("add_po_masks valid_o")
   content.append("run_drc")
   content.append("read_faults ./flist.txt -add -force_retain_code")
-  content.append("set_atpg -merge high -abort_limit 100 -patterns 1")
+  content.append("set_atpg -patterns 1")
   content.append("set_faults -model stuck")
   content.append("run_atpg -ndetects 1 -auto_compression")
   content.append("write_patterns mul_patterns.txt -format stil -internal -replace")
