@@ -3,7 +3,7 @@ from utils import load_model
 from weights_management import save2file_model_weights
 from pairs_management import save2file_model_input_weight_pairs
 from atpg_scripts_management import save2files_atpg_scripts
-
+from trained_model_management import save_model_in_hex_format
 
 from constants import MODELS
 from constants import PRETRAINED_MODEL_PATH
@@ -32,6 +32,11 @@ def main(args):
     print("\n~~~> generating atpg scripts...")
     save2files_atpg_scripts(args.model)
     print("\n~~~> atpg scripts: SAVED\n")
+
+  if args.save_model_hex_format:
+    print("\n~~~> saving "+args.model+" model in hex format...")
+    save_model_in_hex_format(args.model)
+    print("\n~~~> "+args.model+" model : SAVED in HEX format\n")
 
   print("\nexecution completed!\n")
   

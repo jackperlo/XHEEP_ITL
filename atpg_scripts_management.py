@@ -6,7 +6,7 @@ from constants import ATPG_SCRIPTS_OUTPUT_PATH
 
 def save2files_atpg_scripts(model_name):
   """
-    Save the the atpg scripts (.tcl) for each weight of the specified target layer(s) of the specified pre trained model.
+    Save the atpg scripts (.tcl) for each weight of the specified target layer(s) of the specified pre trained model.
 
     Args:
       model (str): the runtime model name 

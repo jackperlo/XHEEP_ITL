@@ -12,6 +12,9 @@ INPUT_WEIGHT_PAIR_OUTPUT_PATH="./outputs/input_weight_pairs"
 # path in which the atpg scripts will be saved
 ATPG_SCRIPTS_OUTPUT_PATH="./outputs/atpg_scripts/"
 
+# path to the hex models folder
+OUTPUT_HEX_MODEL_PATH="./outputs/hex_models/"
+
 """
   Object containing all the supported pretrained models.
 
