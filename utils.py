@@ -90,6 +90,9 @@ def arg_parse():
   # argument related to save the trained model into a hex format to be executed using TFLite 
   parser.add_argument('--save_model_hex_format', action='store_true', help='If this parameter is specified, then the model will be saved in hex format')
   
+  # argument related to generate the input image exploiting the patterns found during the ATPG process
+  parser.add_argument('--generate_input_image', action='store_true', help='If this parameter is specified, then the input image is created exploiting the input patterns found during the ATPG process')
+  
   parsed_args = parser.parse_args()
 
   return parsed_args

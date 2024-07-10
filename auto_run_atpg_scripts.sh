@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # THIS SCRIPT IS MEANT TO BE LAUNCHED FROM THE RISCV_MUL FOLDER
+network_name="lenet5"
 
 scripts_folder="../XHEEP_ITL/outputs/atpg_scripts"
-pattern_file="../XHEEP_ITL/outputs/atpg_patterns_gathered/patterns.txt"
+pattern_file="../XHEEP_ITL/outputs/atpg_patterns_gathered/{$network_name}_patterns.txt"
 # clean up the pattern file and the fault list file
 > $pattern_file
 

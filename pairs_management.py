@@ -3,7 +3,7 @@ import json
 
 from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
 
-def save2file_model_input_weight_pairs(model, network, target_layers):
+def save2file_model_input_weight_pairs(model, network, target_layers, model_name):
   """
     Save the given model specified layers (input, weight) pairs for each output to file.
 
@@ -11,12 +11,13 @@ def save2file_model_input_weight_pairs(model, network, target_layers):
       model (tf.keras.Model): the model to extract the (input,weight) pairs from.
       network (Network): the network object containing the layer names.
       target_layers (list): the names of the layers to save the (input,weight) pairs for.
+      model_name (str): the name of the CNN under exam
   """
   layer_input_weight_pairs = get_layers_input_weight_pairs(model, network, target_layers)
 
   for layer, input_weight_pairs in layer_input_weight_pairs.items():
   
-    file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+layer+"_input_weight_pairs.txt"
+    file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+layer+"_input_weight_pairs.txt"
     with(open(file_name, 'w')) as output_file:
       json.dump(input_weight_pairs, output_file, indent=2)
 

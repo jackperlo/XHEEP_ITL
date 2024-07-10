@@ -15,6 +15,14 @@ ATPG_SCRIPTS_OUTPUT_PATH="./outputs/atpg_scripts/"
 # path to the hex models folder
 OUTPUT_HEX_MODEL_PATH="./outputs/hex_models/"
 
+# path to the patterns gathered
+ATPG_PATTERNS_GATHERED_PATH="./outputs/atpg_patterns_gathered/"
+
+# path to the computed input images
+INPUT_IMAGES_PATH="./outputs/input_images/"
+INPUT_IMAGE_ROWS=32
+INPUT_IMAGE_COLS=32
+
 """
   Object containing all the supported pretrained models.
 

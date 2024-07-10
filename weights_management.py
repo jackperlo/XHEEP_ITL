@@ -4,7 +4,7 @@ import numpy as np
 from constants import WEIGHTS_OUTPUT_PATH
 from utils import int8_to_binary
 
-def save2file_model_weights(weight_format, model, network, target_layers):
+def save2file_model_weights(weight_format, model, network, target_layers, model_name):
   """
   Save, on a file, all the weights of the given target_layers of the model in the given weight_format format 
 
@@ -13,12 +13,13 @@ def save2file_model_weights(weight_format, model, network, target_layers):
     model(tf.lite.Interpreter): the runtime instance of the pretrained model of which the weights need to be saved
     network: the instance of the class representing the class and allowing to get some of its features
     target_layers(string[]): all the layers for which the weights need to be saved
+    model_name (str): name of the CNN being used 
   """
   layer_weight_list = get_layers_weights(model, network, target_layers)
 
   for layer, weights in layer_weight_list.items():
   
-    file_name = WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/"+layer+"_weights.txt"
+    file_name = WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/"+model_name+"_"+layer+"_weights.txt"
     with(open(file_name, 'w')) as output_file:
 
       for weight in weights:

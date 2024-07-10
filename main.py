@@ -1,15 +1,15 @@
 from utils import load_model
+from utils import arg_parse
+from utils import create_output_directory
 
 from weights_management import save2file_model_weights
 from pairs_management import save2file_model_input_weight_pairs
 from atpg_scripts_management import save2files_atpg_scripts
 from trained_model_management import save_model_in_hex_format
+from generate_input_image import generate_image
 
 from constants import MODELS
 from constants import PRETRAINED_MODEL_PATH
-
-from utils import arg_parse
-from utils import create_output_directory
 
 def main(args):
   network, pretrained_model_name, target_layers = MODELS[args.model]
@@ -20,12 +20,12 @@ def main(args):
 
   if args.save_weights:
     print("\n~~~> saving weights mode enabled...")
-    save2file_model_weights(args.weight_format, model, network, target_layers)
+    save2file_model_weights(args.weight_format, model, network, target_layers, args.model)
     print("\n~~~> model weights: SAVED")
   
   if args.save_pairs:
     print("\n~~~> saving (input, weight) pairs mode enabled...")
-    save2file_model_input_weight_pairs(model, network, target_layers)
+    save2file_model_input_weight_pairs(model, network, target_layers, args.model)
     print("\n~~~> model (input, weight) pairs: SAVED\n")
 
   if args.generate_atpg_scripts:
@@ -37,6 +37,11 @@ def main(args):
     print("\n~~~> saving "+args.model+" model in hex format...")
     save_model_in_hex_format(args.model)
     print("\n~~~> "+args.model+" model : SAVED in HEX format\n")
+
+  if args.generate_input_image:
+    print("\n~~~> generating input image...")
+    generate_image(args.model)
+    print("\n~~~> "+args.model+" input image : GENERATED\n")
 
   print("\nexecution completed!\n")
   

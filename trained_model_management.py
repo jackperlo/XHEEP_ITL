@@ -16,7 +16,7 @@ def save_model_in_hex_format(model_name):
   output = subprocess.check_output(command)
   output = output.decode().strip() 
   output = '\n'.join(['0x' + output[i:i+8] for i in range(0, len(output), 9)])
-  out_file_name = OUTPUT_HEX_MODEL_PATH+MODELS[model_name][1].split(".")[0]+".h"
+  out_file_name = OUTPUT_HEX_MODEL_PATH+model_name+".h"
   with open(out_file_name, "w") as outfile:
     model_size = len(output.split('\n'))
     carriage_return = "{\n"
