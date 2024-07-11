@@ -40,7 +40,7 @@ def main(args):
 
   if args.generate_input_image:
     print("\n~~~> generating input image...")
-    generate_image(args.model)
+    generate_image(args.model, args.generate_new_random_available_positions)
     print("\n~~~> "+args.model+" input image : GENERATED\n")
 
   print("\nexecution completed!\n")

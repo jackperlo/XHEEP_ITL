@@ -93,6 +93,9 @@ def arg_parse():
   # argument related to generate the input image exploiting the patterns found during the ATPG process
   parser.add_argument('--generate_input_image', action='store_true', help='If this parameter is specified, then the input image is created exploiting the input patterns found during the ATPG process')
   
+  # argument used to specify whether to generate new random available positions
+  parser.add_argument('--generate_new_random_available_positions', help='If this parameter is specified, then new random input positions for the pattern found are generated. Choices=True, False. Default: False', choices={True, False}, default=False)
+
   parsed_args = parser.parse_args()
 
   return parsed_args
