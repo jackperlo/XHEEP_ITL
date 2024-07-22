@@ -5,7 +5,8 @@ from utils import create_output_directory
 from weights_management import save2file_model_weights
 from pairs_management import save2file_model_input_weight_pairs
 from atpg_scripts_management import save2files_atpg_scripts
-from trained_model_management import save_model_in_hex_format
+from trained_model_management import save_model_in_hex_format_as_words
+from trained_model_management import save_model_in_hex_format_as_bytes
 from generate_input_image import generate_image
 
 from constants import MODELS
@@ -34,9 +35,13 @@ def main(args):
     print("\n~~~> atpg scripts: SAVED\n")
 
   if args.save_model_hex_format:
-    print("\n~~~> saving "+args.model+" model in hex format...")
-    save_model_in_hex_format(args.model)
-    print("\n~~~> "+args.model+" model : SAVED in HEX format\n")
+    print("\n~~~> saving "+args.model+" model in hex format (as words)...")
+    save_model_in_hex_format_as_words(args.model)
+    print("\n~~~> "+args.model+" model : SAVED in HEX format as words\n")
+
+    print("\n~~~> saving "+args.model+" model in hex format (as bytes)...")
+    save_model_in_hex_format_as_bytes(args.model)
+    print("\n~~~> "+args.model+" model : SAVED in HEX format as bytes\n")
 
   if args.generate_input_image:
     print("\n~~~> generating input image...")

@@ -5,7 +5,7 @@ from constants import PRETRAINED_MODEL_PATH
 from constants import OUTPUT_HEX_MODEL_PATH
 from constants import MODELS
 
-def save_model_in_hex_format(model_name):
+def save_model_in_hex_format_as_words(model_name):
   """
     Save the pretrained specified model into a hex dump ".h" in C file using the xxd command (creating the file if it does not already exist)
 
@@ -16,7 +16,7 @@ def save_model_in_hex_format(model_name):
   output = subprocess.check_output(command)
   output = output.decode().strip() 
   output = '\n'.join(['0x' + output[i:i+8] for i in range(0, len(output), 9)])
-  out_file_name = OUTPUT_HEX_MODEL_PATH+model_name+".h"
+  out_file_name = OUTPUT_HEX_MODEL_PATH+model_name+"_as_words.h"
   with open(out_file_name, "w") as outfile:
     model_size = len(output.split('\n'))
     carriage_return = "{\n"
@@ -26,3 +26,15 @@ def save_model_in_hex_format(model_name):
     outfile.write(f"alignas(16) const unsigned char model_data[model_data_size] = {carriage_return}")
     outfile.write(',\n'.join(output.split('\n')))
     outfile.write("};")
+
+def save_model_in_hex_format_as_bytes(model_name):
+  """
+    Save the pretrained specified model into a hex dump ".h" in C file using the xxd command (creating the file if it does not already exist)
+
+    Args:
+      model (str): the runtime model name 
+  """
+  command = ["xxd", "-i", PRETRAINED_MODEL_PATH+MODELS[model_name][1]]
+  out_file_name = OUTPUT_HEX_MODEL_PATH+model_name+"_as_bytes.h"
+  with open(out_file_name, "w") as outfile:
+    result = subprocess.run(command, stdout=outfile, text=True)
