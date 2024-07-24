@@ -1,5 +1,6 @@
 import re
 import random
+import json
 
 from constants import ATPG_PATTERNS_GATHERED_PATH
 from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
@@ -8,7 +9,7 @@ from constants import INPUT_IMAGES_PATH
 from constants import INPUT_IMAGE_ROWS
 from constants import INPUT_IMAGE_COLS
 
-def generate_image(model_name, generate_new_random_positions):
+def generate_image(model_name, generate_new_random_positions, hand_chosen_pattern_position):
   """
     From the gathered patterns the considered weight for that pattern to be multiplied for is retrieved.
     Then, it retrieves, for each of the patterns, which are the input coordinates which are involved in the multiplication 
@@ -18,10 +19,13 @@ def generate_image(model_name, generate_new_random_positions):
     Args:
       model_name (str): name of the model being considered
       generate_new_random_positions (bool - default: False): argument specified by the user to request to extract, randomly, new positions in the input image for each pattern
+      hand_chosen_pattern_position (bool - default: True): argument specified by the user to use a hand-written file containing all the chosen positions for all the patterns
   """
   patterns_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns.txt"
   input_weight_pairs_file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+MODELS[model_name][2][0]+"_input_weight_pairs.txt"
   patterns_available_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_available_positions.txt"
+  patterns_all_possible_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_all_positions.txt"
+  patterns_hand_chosen_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_digit_ONE_pattern_composition.txt"
 
   # open the patterns' file to get all the weight coordinates
   with open(patterns_file_name, "r") as patterns_file:
@@ -45,11 +49,17 @@ def generate_image(model_name, generate_new_random_positions):
             matching_lines[weight_coord] = []
           # ( e.g.: {weight_0_0_0_0 => [input_1_2_3_4, input_24_25_26_27, ...], ...} )
           matching_lines[weight_coord].append(pair_line.split(":")[0][1:-1])
+      with open(patterns_all_possible_positions_file_name, 'w') as outfile:
+        outfile.write(json.dumps(matching_lines))
 
     if matching_lines:
       if generate_new_random_positions: # specified by the user args; default: False
         generate_new_random_positions_file(matching_lines, patterns_available_positions_file_name)
-      generate_hex_matrix(model_name, patterns_available_positions_file_name, patterns_file_name)
+      
+      if hand_chosen_pattern_position: # specified by the user args; default: True 
+        generate_hex_matrix(model_name, patterns_hand_chosen_positions_file_name, patterns_file_name)
+      else:
+        generate_hex_matrix(model_name, patterns_available_positions_file_name, patterns_file_name)
     else:
       print("No matching lines found")
 

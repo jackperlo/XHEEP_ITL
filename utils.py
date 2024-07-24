@@ -96,6 +96,9 @@ def arg_parse():
   # argument used to specify whether to generate new random available positions
   parser.add_argument('--generate_new_random_available_positions', help='If this parameter is specified, then new random input positions for the pattern found are generated. Choices=True, False. Default: False', choices={True, False}, default=False)
 
+  # argument used to specify whether to use hand-chosen pattern positions
+  parser.add_argument('--hand_chosen_pattern_position', help='If this parameter is specified, then the pattern positions are gathered from a hand-written file. Choices=True, False. Default: True', choices={True, False}, default=True)
+
   parsed_args = parser.parse_args()
 
   return parsed_args
