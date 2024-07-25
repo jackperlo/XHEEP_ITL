@@ -35,7 +35,7 @@ INPUT_IMAGE_COLS=32
 MODELS = {
   "lenet5": [
               Lenet(),
-              "lenet5_quantized.tflite", 
+              "lenet5_mnist.tflite", 
               ["conv1"] 
             ]
 }

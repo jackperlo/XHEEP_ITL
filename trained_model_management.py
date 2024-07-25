@@ -1,5 +1,4 @@
 import subprocess
-import os
 
 from constants import PRETRAINED_MODEL_PATH
 from constants import OUTPUT_HEX_MODEL_PATH
@@ -37,4 +36,5 @@ def save_model_in_hex_format_as_bytes(model_name):
   command = ["xxd", "-i", PRETRAINED_MODEL_PATH+MODELS[model_name][1]]
   out_file_name = OUTPUT_HEX_MODEL_PATH+model_name+"_as_bytes.h"
   with open(out_file_name, "w") as outfile:
-    result = subprocess.run(command, stdout=outfile, text=True)
+    subprocess.run(command, stdout=outfile, text=True)
+  
