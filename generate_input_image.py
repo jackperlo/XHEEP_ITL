@@ -23,9 +23,9 @@ def generate_image(model_name, generate_new_random_positions, hand_chosen_patter
   """
   patterns_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns.txt"
   input_weight_pairs_file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+MODELS[model_name][2][0]+"_input_weight_pairs.txt"
-  patterns_available_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_available_positions.txt"
+  # patterns_available_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_available_positions.txt"
   patterns_all_possible_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_all_positions.txt"
-  patterns_hand_chosen_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_digit_ONE_pattern_composition.txt"
+  # patterns_hand_chosen_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_digit_ONE_pattern_composition.txt"
 
   # open the patterns' file to get all the weight coordinates
   with open(patterns_file_name, "r") as patterns_file:
@@ -52,6 +52,7 @@ def generate_image(model_name, generate_new_random_positions, hand_chosen_patter
       with open(patterns_all_possible_positions_file_name, 'w') as outfile:
         outfile.write(json.dumps(matching_lines))
 
+    """
     if matching_lines:
       if generate_new_random_positions: # specified by the user args; default: False
         generate_new_random_positions_file(matching_lines, patterns_available_positions_file_name)
@@ -62,6 +63,7 @@ def generate_image(model_name, generate_new_random_positions, hand_chosen_patter
         generate_hex_matrix(model_name, patterns_available_positions_file_name, patterns_file_name)
     else:
       print("No matching lines found")
+    """
 
 def generate_new_random_positions_file(matching_lines, patterns_available_positions_file_name):
   """

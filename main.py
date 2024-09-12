@@ -8,12 +8,13 @@ from atpg_scripts_management import save2files_atpg_scripts
 from trained_model_management import save_model_in_hex_format_as_words
 from trained_model_management import save_model_in_hex_format_as_bytes
 from generate_input_image import generate_image
+from fault_injection_management import manage_fault_injection_files
 
 from constants import MODELS
 from constants import PRETRAINED_MODEL_PATH
 
 def main(args):
-  network, pretrained_model_name, target_layers = MODELS[args.model]
+  network, pretrained_model_name, target_layers, _, _= MODELS[args.model]
 
   model = load_model(path=PRETRAINED_MODEL_PATH+pretrained_model_name)
   
@@ -43,10 +44,16 @@ def main(args):
     save_model_in_hex_format_as_bytes(args.model)
     print("\n~~~> "+args.model+" model : SAVED in HEX format as bytes\n")
 
+  # unused, Google colab with Class Visualization process engaged, instead
   if args.generate_input_image:
     print("\n~~~> generating input image...")
     generate_image(args.model, args.generate_new_random_available_positions, args.hand_chosen_pattern_position)
     print("\n~~~> "+args.model+" input image : GENERATED\n")
+
+  if args.generate_FI_files:
+    print("\n~~~> generating Fault Injection files...")
+    manage_fault_injection_files(model, network, args.model, target_layers[0])
+    print("\n~~~> Fault Injection files: GENERATED\n")
 
   print("\nexecution completed!\n")
   

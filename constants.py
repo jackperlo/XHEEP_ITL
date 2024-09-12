@@ -18,6 +18,9 @@ OUTPUT_HEX_MODEL_PATH="./outputs/hex_models/"
 # path to the patterns gathered
 ATPG_PATTERNS_GATHERED_PATH="./outputs/atpg_patterns_gathered/"
 
+# path to the patterns gathered
+OUTPUT_FI_FILES_PATH="./outputs/FI_files/"
+
 # path to the computed input images
 INPUT_IMAGES_PATH="./outputs/input_images/"
 INPUT_IMAGE_ROWS=32
@@ -36,6 +39,8 @@ MODELS = {
   "lenet5": [
               Lenet(),
               "lenet5_mnist.tflite", 
-              ["conv1"] 
+              ["conv1"],
+              (6,5,5,1), # conv1 weight tensor shape
+              (1,32,32,1) # conv1 input tensor shape
             ]
 }

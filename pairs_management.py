@@ -17,7 +17,7 @@ def save2file_model_input_weight_pairs(model, network, target_layers, model_name
 
   for layer, input_weight_pairs in layer_input_weight_pairs.items():
   
-    file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+layer+"_input_weight_pairs.txt"
+    file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+layer+"_input_weight_pairs.json"
     with(open(file_name, 'w')) as output_file:
       json.dump(input_weight_pairs, output_file, indent=2)
 
@@ -39,16 +39,13 @@ def get_layers_input_weight_pairs(model: tf.lite.Interpreter, network, target_la
 
   e.g.:
     [
-      { "output_<n_channel_out>": [
-          {"<output_height_index>_<output_weight_index>": [
-              {
-                "<batch_number>,<Input_height_index>,<Input_width_index>,<n_channel_in>"
-                :
-                "<n_channel_out>,<Kernel_height_index>,<Kernel_height_index>,<filter_number>"
-              },
-              ...
-            ]
-          }
+      {"<batch_number>_<output_height_index>_<output_weight_index>_<_n_channel_out>": [
+          {
+            "<batch_number>,<Input_height_index>,<Input_width_index>,<n_channel_in>"
+            :
+            "<n_channel_out>,<Kernel_height_index>,<Kernel_height_index>,<filter_number>"
+          },
+          ...
         ]
       }
     ]
@@ -85,14 +82,13 @@ def get_layers_input_weight_pairs(model: tf.lite.Interpreter, network, target_la
     # get the pairs (input, weight) for each output feature map expected
     outputs = []
     for output_number in range(kernel_tensor_shape[0]): 
-      outputs.append({"output_"+str(output_number): []})
       for output_height in range(output_tensor_shape[1]):
         for output_width in range(output_tensor_shape[2]):
-          outputs[output_number]["output_"+str(output_number)].append({str(output_height)+"_"+str(output_width): []})
+          outputs.append({"1_"+str(output_height)+"_"+str(output_width)+"_"+str(output_number): []})
           for n_channel_in in range(input_tensor_shape[3]):
             for base_coord_h in range(kernel_tensor_shape[1]):
               for base_coord_w in range(kernel_tensor_shape[2]):
-                outputs[output_number]["output_"+str(output_number)][-1][str(output_height)+"_"+str(output_width)].append({
+                outputs[-1]["1_"+str(output_height)+"_"+str(output_width)+"_"+str(output_number)].append({
                   "1,"+str(base_coord_h+output_height+strides[0]-1)+","+str(base_coord_w+output_width+strides[1]-1)+","+str(n_channel_in) : 
                   str(output_number)+","+str(base_coord_h)+","+str(base_coord_w)+","+str(n_channel_in)})
 

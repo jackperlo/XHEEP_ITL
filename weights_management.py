@@ -3,6 +3,7 @@ import numpy as np
 
 from constants import WEIGHTS_OUTPUT_PATH
 from utils import int8_to_binary
+from utils import int8_to_hex
 
 def save2file_model_weights(weight_format, model, network, target_layers, model_name):
   """
@@ -15,8 +16,19 @@ def save2file_model_weights(weight_format, model, network, target_layers, model_
     target_layers(string[]): all the layers for which the weights need to be saved
     model_name (str): name of the CNN being used 
   """
+  # reading weight tensor of each specified target_layers
   layer_weight_list = get_layers_weights(model, network, target_layers)
 
+  """
+  # reading weight tensor from the bin file
+  layer_weight_list = dict()
+  arr = []
+  with(open("./outputs/weights_binary/lenet5_conv1_weights.txt", 'r')) as in_file:
+    for line in in_file:
+      arr.append(line)
+    layer_weight_list["conv1"] = arr
+  """
+    
   for layer, weights in layer_weight_list.items():
   
     file_name = WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/"+model_name+"_"+layer+"_weights.txt"
@@ -27,8 +39,10 @@ def save2file_model_weights(weight_format, model, network, target_layers, model_
           conversion_function = np.int8
         elif weight_format == 'binary':
           conversion_function = int8_to_binary
+        elif weight_format == 'hex':
+          conversion_function = int8_to_hex
         else:
-          print('ERROR: Invalid output format for model weights')
+          print('ERROR: Invalid output format for model weights. Got: {weight_format}')
           exit(-1)
 
         converted_weights = conversion_function(weight)

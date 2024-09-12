@@ -1,0 +1,142 @@
+import numpy as np
+import tensorflow as tf
+import json
+
+from constants import WEIGHTS_OUTPUT_PATH
+from constants import OUTPUT_FI_FILES_PATH
+from constants import INPUT_IMAGES_PATH
+from constants import MODELS
+
+def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name, target_layer):
+  # input and weight tensors saved using google colab
+  # save_weight_as_tensor(model_name, target_layer)
+  # save_input_as_tensor(model_name, target_layer)
+  save_mul_indexes(model, network, target_layer, model_name)
+
+def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
+  """
+  This function save a .json file which maps a list of tuples representing 
+  all the multiplications performed between the corresponding input location index (as a tuple)
+  and the corresponding weight location index (as another tuple).
+
+  Args:
+    model (tf.lite.Interpreter): the TensorFlow Lite interpreter object.
+    network: the network object containing details about the layers.
+    layer (str): the target layer of the considered model.
+    model_name (str): name of the model being considered
+
+  e.g.:
+    [
+      (
+        (<batch_number>,<Input_height_index>,<Input_width_index>,<n_channel_in>)
+        ,
+        (<n_channel_out>,<Kernel_height_index>,<Kernel_height_index>,<filter_number>)
+      ),
+      ...
+    ]
+  """
+  mul_indexes_path = OUTPUT_FI_FILES_PATH+model_name+"_mul_indexes"
+  input_weight_pairs = dict()
+
+  tensors = model.get_tensor_details()
+  ops = model._get_ops_details()
+
+  # get the operation index, strides and padding for by the specified layer 
+  op_index, _, _ = network.get_conv_layer_details(layer)
+  strides = network.get_conv_layer_strides(layer)
+  padding = network.get_conv_layer_padding(layer)
+
+  # get the index of the input tensor, kernel tensor, bias tensor and output tensor
+  input_tensor_idx = ops[op_index]['inputs'][0] 
+  kernel_tensor_idx = ops[op_index]['inputs'][1]
+  bias_tensor_idx = ops[op_index]['inputs'][2]
+  output_tensor_idx = ops[op_index]['outputs'][0]
+
+  def check_indexes_goodness(ops, tensors, indexes):
+    op_index, input_tensor_idx, kernel_tensor_idx, bias_tensor_idx, output_tensor_idx = indexes
+    # check for the got layer index goodness
+    if ops[op_index]['index'] != op_index:
+      print('ERROR: CNN layer index not compatible with submitted target layer index')
+      exit(-1)
+    # check the got tensor indexes goodness
+    if tensors[input_tensor_idx]['index'] != input_tensor_idx:
+      print('ERROR: input tensor index of the considered convolution layer not compatible with the expected one')
+      exit(-1)
+    if tensors[kernel_tensor_idx]['index'] != kernel_tensor_idx:
+      print('ERROR: weight tensor(kernel) index of the considered convolution layer not compatible with the expected one')
+      exit(-1)
+    if tensors[bias_tensor_idx]['index'] != bias_tensor_idx:
+      print('ERROR: bias tensor index of the considered convolution layer not compatible with the expected one')
+      exit(-1)
+    if tensors[output_tensor_idx]['index'] != output_tensor_idx:
+      print('ERROR: output tensor index of the considered convolution layer not compatible with the expected one')
+      exit(-1)
+  check_indexes_goodness(ops, tensors, [op_index, input_tensor_idx, kernel_tensor_idx, bias_tensor_idx, output_tensor_idx])
+  
+  # get the input and kernel shapes
+  input_tensor_shape = tensors[input_tensor_idx]['shape']
+  kernel_tensor_shape = tensors[kernel_tensor_idx]['shape']
+  output_tensor_shape = tensors[output_tensor_idx]['shape']
+  
+  # manage the case in which padding must be added at the input tensor in the convolutional operation
+  if padding['type'] == "same":
+    input_tensor_shape[1] += (padding['values'][0]+padding['values'][2]) # top, bottom padding
+    input_tensor_shape[2] += (padding['values'][1]+padding['values'][3]) # left, right padding
+
+  # get the pairs (input, weight) for each output feature map expected
+  input_weight_pairs = []
+  for output_number in range(kernel_tensor_shape[0]): 
+    for output_height in range(output_tensor_shape[1]):
+      for output_width in range(output_tensor_shape[2]):
+        for n_channel_in in range(input_tensor_shape[3]):
+          for base_coord_h in range(kernel_tensor_shape[1]):
+            for base_coord_w in range(kernel_tensor_shape[2]):
+              input_weight_pairs.append(
+                (
+                  (1,base_coord_h+output_height+strides[0]-1,base_coord_w+output_width+strides[1]-1,n_channel_in),
+                  (output_number,base_coord_h,base_coord_w,n_channel_in)
+                )
+              )
+    
+  with open(mul_indexes_path, 'w') as mul_indexes_file:
+    json.dump(input_weight_pairs, mul_indexes_file)
+
+"""
+  Starting from the hex dump of a given weight tensor, saves the weight 
+  tensor of the specified layer of the specified CNN as a .npy file
+
+  Args:
+      model_name (str): name of the model being considered
+      target_layer (str): name of the layer being considered
+"""
+def save_weight_as_tensor(model_name, target_layer):
+  input_weight_file_path = WEIGHTS_OUTPUT_PATH+"_hex/"+model_name+"_"+target_layer+"_weights.txt"
+  output_weight_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_weight_tensor"
+  
+  # print the int8 weight tensor to file
+  with(open(input_weight_file_path, 'r')) as input_weight_file:
+    hex_weights = input_weight_file.read().strip().replace('\n', '')
+    hex_array = np.array([int(hex_weights[i:i+8], 16) for i in range(0, len(hex_weights), 8)], dtype=np.int8)
+    tensor = hex_array[:np.prod(MODELS[model_name][3])].reshape(MODELS[model_name][3])
+
+  np.save(output_weight_tensor_path, tensor)
+
+"""
+  Starting from the hex dump of a given input tensor, saves the input 
+  tensor of the specified layer of the specified CNN as a .npy file
+
+  Args:
+      model_name (str): name of the model being considered
+      target_layer (str): name of the layer being considered
+"""
+def save_input_as_tensor(model_name, target_layer):
+  input_in_image_file_path = INPUT_IMAGES_PATH+model_name+"_input_image.hex"
+  output_in_image_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_input_tensor"
+  
+  # print the int8 input tensor to file
+  with(open(input_in_image_file_path, 'r')) as input_weight_file:
+    hex_weights = input_weight_file.read().strip().replace('\n', '').replace(' ', '')
+    hex_array = np.array([int(hex_weights[i:i+2], 16) for i in range(0, len(hex_weights), 2)], dtype=np.int8)
+    tensor = hex_array[:np.prod(MODELS[model_name][4])].reshape(MODELS[model_name][4])
+
+  np.save(output_in_image_tensor_path, tensor)

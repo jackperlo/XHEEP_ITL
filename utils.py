@@ -54,6 +54,32 @@ def int8_to_binary(num):
 
   return binary_strings
 
+def int8_to_hex(num):
+  """
+  Convert a int8(:np.ndarray) number to its binary representation according to the IEEE-754 standard.
+  
+  Args: 
+    the number to convert.
+
+  Returns: 
+    a string containing the 32-bit hex representation.
+  """
+  if isinstance(num, np.ndarray):
+    hex_list = []
+    for val in int8_to_binary(num): 
+      # Convert binary string to integer, taking into account 2's complement
+      if val[0] == '1':  # Negative number
+          int_val = -((1 << len(val[:-1])) - int(val[:-1], 2))
+      else:  # Positive number
+          int_val = int(val[:-1], 2)
+      # Convert integer to hexadecimal string
+      hex_val = format(int_val & 0xFFFFFFFF, '08x')  # Mask to 32 bits
+      hex_list.append(hex_val)
+      return hex_list
+  else:
+    print("Error: while trying to convert an int8 to hex; the int is not an instance of np.ndarray")
+    exit(-1)
+
 def create_output_directory(weight_format):
   """
   Create the output directories if it does not already exist.
@@ -79,7 +105,7 @@ def arg_parse():
 
   # arguments related to read and save weights from the run time model
   parser.add_argument('--save_weights', action='store_true', help='If this parameter is specified, then the execution will read and save the weights of the specified layer(s)')
-  parser.add_argument('--weight_format', help='The output weight format. Default: binary', type=str, choices=['binary', 'int8'], default="binary")
+  parser.add_argument('--weight_format', help='The output weight format. Default: binary', type=str, choices=['binary', 'int8', 'hex'], default="binary")
 
   # argument related to read and save (input, weight) pairs from the run time model
   parser.add_argument('--save_pairs', action='store_true', help='If this parameter is specified, then the execution will read and save the (input, weight) pairs of the specified layer(s)')
@@ -98,6 +124,9 @@ def arg_parse():
 
   # argument used to specify whether to use hand-chosen pattern positions
   parser.add_argument('--hand_chosen_pattern_position', help='If this parameter is specified, then the pattern positions are gathered from a hand-written file. Choices=True, False. Default: True', choices={True, False}, default=True)
+
+  # argument used to save all the files needed for the fault injection process
+  parser.add_argument('--generate_FI_files', action='store_true', help='If this parameter is specified, then all the files needed for the fault injection phase are generated.')
 
   parsed_args = parser.parse_args()
 
