@@ -56,7 +56,7 @@ def int8_to_binary(num):
 
 def int8_to_hex(num):
   """
-  Convert a int8(:np.ndarray) number to its binary representation according to the IEEE-754 standard.
+  Convert a int8(:np.ndarray) number to its hex representation
   
   Args: 
     the number to convert.

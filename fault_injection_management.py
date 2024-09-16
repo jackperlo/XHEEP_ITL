@@ -8,10 +8,38 @@ from constants import INPUT_IMAGES_PATH
 from constants import MODELS
 
 def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name, target_layer):
-  # input and weight tensors saved using google colab
+  """input and weight tensors saved using google colab"""
   # save_weight_as_tensor(model_name, target_layer)
   # save_input_as_tensor(model_name, target_layer)
   save_mul_indexes(model, network, target_layer, model_name)
+  save_mul(target_layer, model_name)
+
+def save_mul(target_layer, model_name):
+  output_mults_path = OUTPUT_FI_FILES_PATH+model_name+"_mults.txt"
+  input_mul_indexes_path = OUTPUT_FI_FILES_PATH+model_name+"_mul_indexes.json"
+  input_weight_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_weight_tensor.npy"
+  input_in_image_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_input_tensor.npy"
+
+  input_tensor = np.load(input_in_image_tensor_path) 
+  weight_tensor = np.load(input_weight_tensor_path)
+  
+  with open(input_mul_indexes_path, 'r') as mul_indexes_file:
+    mul_indexes = json.load(mul_indexes_file)
+    
+  def val_to_hex(num):
+    return f'0x{num & 0xFFFFFFFF:08X}'
+
+  content = ""
+  tuple_data = [tuple((tuple(inner[0]), tuple(inner[1]))) for inner in mul_indexes]
+  for t in tuple_data:
+    i_idx0, i_idx1, i_idx2, i_idx3 = t[0]
+    w_idx0, w_idx1, w_idx2, w_idx3 = t[1]
+    content+=val_to_hex(input_tensor[i_idx0, i_idx1, i_idx2, i_idx3])+" "
+    content+=val_to_hex(weight_tensor[w_idx0, w_idx1, w_idx2, w_idx3])+"\n"
+
+  with open(output_mults_path, 'w') as mul_file:
+    mul_file.write(content)
+
 
 def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
   """
@@ -35,7 +63,7 @@ def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
       ...
     ]
   """
-  mul_indexes_path = OUTPUT_FI_FILES_PATH+model_name+"_mul_indexes"
+  mul_indexes_path = OUTPUT_FI_FILES_PATH+model_name+"_mul_indexes.json"
   input_weight_pairs = dict()
 
   tensors = model.get_tensor_details()
@@ -93,7 +121,7 @@ def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
             for base_coord_w in range(kernel_tensor_shape[2]):
               input_weight_pairs.append(
                 (
-                  (1,base_coord_h+output_height+strides[0]-1,base_coord_w+output_width+strides[1]-1,n_channel_in),
+                  (0,base_coord_h+output_height+strides[0]-1,base_coord_w+output_width+strides[1]-1,n_channel_in),
                   (output_number,base_coord_h,base_coord_w,n_channel_in)
                 )
               )
