@@ -23,7 +23,7 @@ def save_mul(target_layer, model_name, input_tensor_path=None):
   input_weight_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_weight_tensor.npy"
   input_in_image_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_input_tensor.npy"
 
-  if input_tensor is None:
+  if input_tensor_path is None:
     input_tensor = np.load(input_in_image_tensor_path) 
   else:
     input_tensor = np.load(input_tensor_path) 
