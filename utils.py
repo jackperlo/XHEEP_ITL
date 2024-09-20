@@ -102,6 +102,8 @@ def arg_parse():
   
   # argument used to specify the used pre-trained model
   parser.add_argument('--model', help='CNN model to use. Default: lenet5', choices=MODELS.keys(), default="lenet5")
+  # argument used to specify the used pre-trained model layer
+  parser.add_argument('--layer', help='CNN model layer of interest. Default: conv1', type=str, default="conv1")
 
   # arguments related to read and save weights from the run time model
   parser.add_argument('--save_weights', action='store_true', help='If this parameter is specified, then the execution will read and save the weights of the specified layer(s)')
@@ -127,6 +129,8 @@ def arg_parse():
 
   # argument used to save all the files needed for the fault injection process
   parser.add_argument('--generate_FI_files', action='store_true', help='If this parameter is specified, then all the files needed for the fault injection phase are generated.')
+  # argument used to specify the path of the input tensor of a given convolutional layer
+  parser.add_argument('--input_tensor_path', help='If this parameter is specified, the FI generated files for the specified convolutional layer get the input tensor by the path specified in this argument', type=str)
 
   parsed_args = parser.parse_args()
 

@@ -52,7 +52,10 @@ def main(args):
 
   if args.generate_FI_files:
     print("\n~~~> generating Fault Injection files...")
-    manage_fault_injection_files(model, network, args.model, target_layers[0])
+    if args.input_tensor_path is None:
+      manage_fault_injection_files(model, network, args.model, args.layer)
+    else:
+      manage_fault_injection_files(model, network, args.model, args.layer, args.input_tensor_path)
     print("\n~~~> Fault Injection files: GENERATED\n")
 
   print("\nexecution completed!\n")

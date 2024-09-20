@@ -7,14 +7,17 @@ from constants import OUTPUT_FI_FILES_PATH
 from constants import INPUT_IMAGES_PATH
 from constants import MODELS
 
-def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name, target_layer):
+def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name, target_layer, input_tensor_path=None):
   """input and weight tensors saved using google colab"""
   # save_weight_as_tensor(model_name, target_layer)
   # save_input_as_tensor(model_name, target_layer)
   save_mul_indexes(model, network, target_layer, model_name)
-  save_mul(target_layer, model_name)
+  if input_tensor_path is None:
+    save_mul(target_layer, model_name)
+  else:
+    save_mul(target_layer, model_name, input_tensor_path)
 
-def save_mul(target_layer, model_name, input_tensor=None):
+def save_mul(target_layer, model_name, input_tensor_path=None):
   output_mults_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mults.txt"
   input_mul_indexes_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mul_indexes.json"
   input_weight_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_weight_tensor.npy"
@@ -22,6 +25,8 @@ def save_mul(target_layer, model_name, input_tensor=None):
 
   if input_tensor is None:
     input_tensor = np.load(input_in_image_tensor_path) 
+  else:
+    input_tensor = np.load(input_tensor_path) 
   weight_tensor = np.load(input_weight_tensor_path)
   
   with open(input_mul_indexes_path, 'r') as mul_indexes_file:
@@ -64,7 +69,7 @@ def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
       ...
     ]
   """
-  mul_indexes_path = OUTPUT_FI_FILES_PATH+model_name+"_mul_indexes.json"
+  mul_indexes_path = OUTPUT_FI_FILES_PATH+layer+"/"+model_name+"_"+layer+"_mul_indexes.json"
   input_weight_pairs = dict()
 
   tensors = model.get_tensor_details()
