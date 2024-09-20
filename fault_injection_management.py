@@ -14,13 +14,14 @@ def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name
   save_mul_indexes(model, network, target_layer, model_name)
   save_mul(target_layer, model_name)
 
-def save_mul(target_layer, model_name):
-  output_mults_path = OUTPUT_FI_FILES_PATH+model_name+"_mults.txt"
-  input_mul_indexes_path = OUTPUT_FI_FILES_PATH+model_name+"_mul_indexes.json"
-  input_weight_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_weight_tensor.npy"
-  input_in_image_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_input_tensor.npy"
+def save_mul(target_layer, model_name, input_tensor=None):
+  output_mults_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mults.txt"
+  input_mul_indexes_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mul_indexes.json"
+  input_weight_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_weight_tensor.npy"
+  input_in_image_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_input_tensor.npy"
 
-  input_tensor = np.load(input_in_image_tensor_path) 
+  if input_tensor is None:
+    input_tensor = np.load(input_in_image_tensor_path) 
   weight_tensor = np.load(input_weight_tensor_path)
   
   with open(input_mul_indexes_path, 'r') as mul_indexes_file:
