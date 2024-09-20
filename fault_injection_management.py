@@ -119,15 +119,13 @@ def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
         for n_channel_in in range(input_tensor_shape[3]):
           for base_coord_h in range(kernel_tensor_shape[1]):
             for base_coord_w in range(kernel_tensor_shape[2]):
-              input_weight_pairs.append(
-                (
-                  (0,base_coord_h+output_height+strides[0]-1,base_coord_w+output_width+strides[1]-1,n_channel_in),
-                  (output_number,base_coord_h,base_coord_w,n_channel_in)
-                )
-              )
+              input = np.array([0,base_coord_h+output_height+strides[0]-1,base_coord_w+output_width+strides[1]-1,n_channel_in], dtype=np.int8)
+              weight = np.array([output_number,base_coord_h,base_coord_w,n_channel_in], dtype=np.int8)
+              input_weight_pairs.append([input, weight])
     
+  input_weight_pairs_serializable = [[a.tolist(), b.tolist()] for a, b in input_weight_pairs]
   with open(mul_indexes_path, 'w') as mul_indexes_file:
-    json.dump(input_weight_pairs, mul_indexes_file)
+    json.dump(input_weight_pairs_serializable, mul_indexes_file)
 
 """
   Starting from the hex dump of a given weight tensor, saves the weight 
