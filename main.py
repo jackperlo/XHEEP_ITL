@@ -35,6 +35,7 @@ def main(args):
     save2files_atpg_scripts(args.model)
     print("\n~~~> atpg scripts: SAVED\n")
 
+  # used to run the model into XHEEP architecture
   if args.save_model_hex_format:
     print("\n~~~> saving "+args.model+" model in hex format (as words)...")
     save_model_in_hex_format_as_words(args.model)

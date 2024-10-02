@@ -11,19 +11,18 @@ def save2files_atpg_scripts(model_name):
     Args:
       model (str): the runtime model name 
   """
-  for layer in MODELS[model_name][2]:
-    with open(WEIGHTS_OUTPUT_PATH+"_binary/"+layer+"_weights.txt", 'r') as weights:
-      for (line_number, weight) in enumerate(weights):
-        content_positive = write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight, 0)
-        content_negative = write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight, 1)
-        file_name_positive = get_output_file_name(line_number, 0)
-        file_name_negative = get_output_file_name(line_number, 1)
-        with open(ATPG_SCRIPTS_OUTPUT_PATH+file_name_positive, 'w') as output_file:
-          for command in content_positive:
-            output_file.write("%s\n" % command)
-        with open(ATPG_SCRIPTS_OUTPUT_PATH+file_name_negative, 'w') as output_file:
-          for command in content_negative:
-            output_file.write("%s\n" % command)
+  with open(WEIGHTS_OUTPUT_PATH+"_binary/"+model_name+"_"+MODELS[model_name][2][0]+"_weights.txt", 'r') as weights:
+    for (line_number, weight) in enumerate(weights):
+      content_positive = write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight, 0)
+      content_negative = write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight, 1)
+      file_name_positive = get_output_file_name(line_number, 0)
+      file_name_negative = get_output_file_name(line_number, 1)
+      with open(ATPG_SCRIPTS_OUTPUT_PATH+file_name_positive, 'w') as output_file:
+        for command in content_positive:
+          output_file.write("%s\n" % command)
+      with open(ATPG_SCRIPTS_OUTPUT_PATH+file_name_negative, 'w') as output_file:
+        for command in content_negative:
+          output_file.write("%s\n" % command)
 
 def write_atpg_content_for_cve2_multdiv_fast_RV32M3(weight, sign):
   """

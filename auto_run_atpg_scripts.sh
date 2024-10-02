@@ -9,7 +9,7 @@ pattern_file="../XHEEP_ITL/outputs/atpg_patterns_gathered/{$network_name}_patter
 > $pattern_file
 
 # total iterations can be retreived by multiplying (n_channels_out*height*width*n_filters)
-total_iterations=5*5*5*1
+total_iterations=6*5*5*1
 
 # variables used to calculate the atpg script file name
 n_channels_out=0

@@ -39,9 +39,8 @@ MODELS = {
   "lenet5": [
               Lenet(),
               "lenet5_mnist.tflite", 
-              ["conv1", "conv2"],
+              ["conv1", "conv2", "conv3"],
               (6,5,5,1), # conv1 weight tensor shape
               (1,32,32,1) # conv1 input tensor shape
-              
             ]
 }
