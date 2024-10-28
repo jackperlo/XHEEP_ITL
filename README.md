@@ -12,6 +12,14 @@ Calling the main function, different functionalities can be chosen to be execute
 
 The .ipynb file contained in this repository allows the complete management of the LeNet-5 network, and input image creation exploiting the IICV technique.
 
+# Contacts
+Giacomo Perlo:  [Linkedin](https://www.linkedin.com/in/giacomo-perlo/), <perlogiacomo@gmail.com> <br/>
+If you need help or want to know something more about all of this, I'm ready and excited to help you!
+
+# Licence
+[LICENCE](LICENCE)
+
+# Presentation
 ![Example Image](https://drive.google.com/uc?export=view&id=1gmyyAsoEoneRPAPkVl0HfN0RozlomRnX)<br/>
 ![Example Image](https://drive.google.com/uc?export=view&id=1txYRPwq118y1TS67hz3yaBj849TeSwFN)<br/>
 ![Example Image](https://drive.google.com/uc?export=view&id=17wm58kk3Jf0vFXSU3ZDJeD75n32W1rwQ)<br/>
