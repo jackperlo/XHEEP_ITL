@@ -1,5 +1,5 @@
 # Software-based test images for in-field fault detection of hardware accelerators
-This repositoy contains the code developed to successfully generate and validate the ITL (Image Test Library) technique for Edge Accelerators (i.e., the RISC-v 32 bit integer multiplier used by the X-HEEP platform).
+This repositoy works as a utility library to successfully generate and validate the ITL (Image Test Library) technique for ultra-low power Edge Accelerators (i.e., the RISC-v 32 bit integer multiplier used by the X-HEEP platform).
 Note: to date [10/2024] an interpreter < "Python 3.12" must be used due to the lack of compatibility between Tensoflow Lite module and the latest version of the interpreter.
 
 Calling the main function, different functionalities can be chosen to be executed:
