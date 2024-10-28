@@ -8,9 +8,19 @@ from constants import INPUT_IMAGES_PATH
 from constants import MODELS
 
 def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name, target_layer, input_tensor_path=None):
-  """input and weight tensors saved using google colab"""
-  # save_weight_as_tensor(model_name, target_layer)
-  # save_input_as_tensor(model_name, target_layer)
+  """
+    Collect and save each <input, weight> involved into a convolution of the specified network
+    and layer, and their indexes.
+    Note: input and weight tensors must be already present to correctly run this function
+
+    Args:
+      model (tf.lite.Interpreter): the model to extract the (input,weight) pairs from.
+      network (Network): the network object containing the layer names.
+      model_name (str): the name of the CNN under exam
+      target_layer (str): the names of the layer to save the (input,weight) pairs for.
+      input_tensor_path (str): path where the input tensor of the layer under exam is saved 
+                              (if None, the input_image of the model is loaded as input tensor)
+  """
   save_mul_indexes(model, network, target_layer, model_name)
   if input_tensor_path is None:
     save_mul(target_layer, model_name)
@@ -18,17 +28,34 @@ def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name
     save_mul(target_layer, model_name, input_tensor_path)
 
 def save_mul(target_layer, model_name, input_tensor_path=None):
+  """
+  This function save a .txt file containing the list of multiplications' factors
+  involved during the convolution operation of the specified target layer
+
+  Args:
+    target_layer (str): the names of the layer to save the (input,weight) pairs for.
+    model_name (str): the name of the CNN under exam
+    input_tensor_path (str): path where the input tensor of the layer under exam is saved
+                            (if None, the input_image of the model is loaded as input tensor)
+
+  e.g.:
+    0xFFFFFF91 0xFFFFFFB7
+    0xFFFFFFB5 0xFFFFFFDF
+    0xFFFFFFCD 0x00000019
+  """
   output_mults_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mults.txt"
   input_mul_indexes_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mul_indexes.json"
   input_weight_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_weight_tensor.npy"
   input_in_image_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_input_tensor.npy"
 
+  # loading tensors 
   if input_tensor_path is None:
     input_tensor = np.load(input_in_image_tensor_path) 
   else:
     input_tensor = np.load(input_tensor_path) 
   weight_tensor = np.load(input_weight_tensor_path)
   
+  # loading multiplication indexes
   with open(input_mul_indexes_path, 'r') as mul_indexes_file:
     mul_indexes = json.load(mul_indexes_file)
     
@@ -133,15 +160,17 @@ def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
   with open(mul_indexes_path, 'w') as mul_indexes_file:
     json.dump(input_weight_pairs_serializable, mul_indexes_file)
 
-"""
+
+def save_weight_as_tensor(model_name, target_layer):
+  """
+  UNUSED 
   Starting from the hex dump of a given weight tensor, saves the weight 
   tensor of the specified layer of the specified CNN as a .npy file
 
   Args:
       model_name (str): name of the model being considered
       target_layer (str): name of the layer being considered
-"""
-def save_weight_as_tensor(model_name, target_layer):
+  """
   input_weight_file_path = WEIGHTS_OUTPUT_PATH+"_hex/"+model_name+"_"+target_layer+"_weights.txt"
   output_weight_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_weight_tensor"
   
@@ -153,15 +182,16 @@ def save_weight_as_tensor(model_name, target_layer):
 
   np.save(output_weight_tensor_path, tensor)
 
-"""
+def save_input_as_tensor(model_name, target_layer):
+  """
+  UNUSED
   Starting from the hex dump of a given input tensor, saves the input 
   tensor of the specified layer of the specified CNN as a .npy file
 
   Args:
       model_name (str): name of the model being considered
       target_layer (str): name of the layer being considered
-"""
-def save_input_as_tensor(model_name, target_layer):
+  """
   input_in_image_file_path = INPUT_IMAGES_PATH+model_name+"_input_image.hex"
   output_in_image_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_input_tensor"
   

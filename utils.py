@@ -6,6 +6,10 @@ import os
 from constants import WEIGHTS_OUTPUT_PATH
 from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
 from constants import ATPG_SCRIPTS_OUTPUT_PATH
+from constants import OUTPUT_HEX_MODEL_PATH
+from constants import OUTPUT_FI_FILES_PATH
+from constants import ATPG_PATTERNS_GATHERED_PATH
+
 from constants import MODELS
 
 def load_model(path):
@@ -90,6 +94,9 @@ def create_output_directory(weight_format):
   os.makedirs(WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/", exist_ok=True)
   os.makedirs(INPUT_WEIGHT_PAIR_OUTPUT_PATH, exist_ok=True)
   os.makedirs(ATPG_SCRIPTS_OUTPUT_PATH, exist_ok=True)
+  os.makedirs(OUTPUT_HEX_MODEL_PATH, exist_ok=True)
+  os.makedirs(OUTPUT_FI_FILES_PATH, exist_ok=True)
+  os.makedirs(ATPG_PATTERNS_GATHERED_PATH, exist_ok=True)
 
 def arg_parse():
   """
@@ -118,15 +125,9 @@ def arg_parse():
   # argument related to save the trained model into a hex format to be executed using TFLite 
   parser.add_argument('--save_model_hex_format', action='store_true', help='If this parameter is specified, then the model will be saved in hex format')
   
-  # argument related to generate the input image exploiting the patterns found during the ATPG process
-  parser.add_argument('--generate_input_image', action='store_true', help='If this parameter is specified, then the input image is created exploiting the input patterns found during the ATPG process')
+  # argument related to gather all the patterns' suitable input positions
+  parser.add_argument('--gather_patterns_input_positions', action='store_true', help='If this parameter is specified, then all the patterns\' suitable input positions are gathered')
   
-  # argument used to specify whether to generate new random available positions
-  parser.add_argument('--generate_new_random_available_positions', help='If this parameter is specified, then new random input positions for the pattern found are generated. Choices=True, False. Default: False', choices={True, False}, default=False)
-
-  # argument used to specify whether to use hand-chosen pattern positions
-  parser.add_argument('--hand_chosen_pattern_position', help='If this parameter is specified, then the pattern positions are gathered from a hand-written file. Choices=True, False. Default: True', choices={True, False}, default=True)
-
   # argument used to save all the files needed for the fault injection process
   parser.add_argument('--generate_FI_files', action='store_true', help='If this parameter is specified, then all the files needed for the fault injection phase are generated.')
   # argument used to specify the path of the input tensor of a given convolutional layer
