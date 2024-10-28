@@ -1,5 +1,16 @@
 # Software-based test images for in-field fault detection of hardware accelerators
+This repositoy contains the code developed to successfully generate and validate the ITL (Image Test Library) technique for Edge Accelerators (i.e., the RISC-v 32 bit integer multiplier used by the X-HEEP platform).
 Note: to date [10/2024] an interpreter < "Python 3.12" must be used due to the lack of compatibility between Tensoflow Lite module and the latest version of the interpreter.
+
+Calling the main function, different functionalities can be chosen to be executed:
+ - `python3 main.py --save_weights` -- save to file the trained weights of the specified model and layer in the specified format (hex, bin, int8)
+ - `python3 main.py --save_pairs` -- save to file the <input, weight> pairs involved during the convolution algorithm of the specified model and convolutional layer
+ - `python3 main.py --generate_atpg_scripts` -- generate .tcl scripts for the ATPG process, one .tcl for each trained signed weight of the first convolutinal layer
+ - `python3 main.py --save_model_hex_format` -- save the model in .hex (words/bytes) to run it into the X-HEEP platform running on the PYNQ-Z2 board
+ - `python3 main.py --gather_patterns_input_positions` -- collect, for all the test patterns, all the input positions which are multiplied for a given a weight which is, in turn, multiplied for a given test pattern
+ - `python3 main.py --generate_FI_files` -- collect itl-validation fault injection files
+
+The .ipynb file contained in this repository allows the complete management of the LeNet-5 network, and input image creation exploiting the IICV technique.
 
 ![Example Image](https://drive.google.com/uc?export=view&id=1gmyyAsoEoneRPAPkVl0HfN0RozlomRnX)<br/>
 ![Example Image](https://drive.google.com/uc?export=view&id=1txYRPwq118y1TS67hz3yaBj849TeSwFN)<br/>
