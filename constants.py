@@ -26,6 +26,9 @@ INPUT_IMAGES_PATH="./outputs/input_images/"
 INPUT_IMAGE_ROWS=32
 INPUT_IMAGE_COLS=32
 
+lenet5_in_zero_point = -128
+lenet5_in_scale = 0.003921568859368563
+
 """
   Object containing all the supported pretrained models.
 

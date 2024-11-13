@@ -127,9 +127,13 @@ def arg_parse():
   
   # argument related to gather all the patterns' suitable input positions
   parser.add_argument('--gather_patterns_input_positions', action='store_true', help='If this parameter is specified, then all the patterns\' suitable input positions are gathered')
+
+  # argument related to generate custom input image
+  parser.add_argument('--generate_custom_input_image', help='Which kind of input image the system should generate. Default: FWP (Fill with pattern)', type=str, choices=["FWP"], default="FWP")
   
   # argument used to save all the files needed for the fault injection process
   parser.add_argument('--generate_FI_files', action='store_true', help='If this parameter is specified, then all the files needed for the fault injection phase are generated.')
+  
   # argument used to specify the path of the input tensor of a given convolutional layer
   parser.add_argument('--input_tensor_path', help='If this parameter is specified, the FI generated files for the specified convolutional layer get the input tensor by the path specified in this argument', type=str)
 

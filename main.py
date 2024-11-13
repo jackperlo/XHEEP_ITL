@@ -9,6 +9,7 @@ from trained_model_management import save_model_in_hex_format_as_words
 from trained_model_management import save_model_in_hex_format_as_bytes
 from patterns_input_positions import get_atpg_patterns_input_positions
 from fault_injection_management import manage_fault_injection_files
+from custom_input_image_management import generate_custom_input_image
 
 from constants import MODELS
 from constants import PRETRAINED_MODEL_PATH
@@ -54,6 +55,11 @@ def main(args):
     print("\n~~~> gathering test patterns' input positions...")
     get_atpg_patterns_input_positions(args.model)
     print("\n~~~> "+args.model+" test patterns' input positions : GATHERED\n")
+
+  if args.generate_custom_input_image:
+    print("\n~~~> generate custom input image (mode: "+args.generate_custom_input_image+")...")
+    generate_custom_input_image(args.generate_custom_input_image, args.model)
+    print("\n~~~> custom input image: GENERATED\n")
 
   # collect itl-validation fault injection files 
   if args.generate_FI_files:
