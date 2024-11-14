@@ -61,18 +61,20 @@ def generate_pattern_filled_input_image(model_name):
       outfile.write(json.dumps(input_image_options))
 
     # build the FWP image assign a random pattern (suitable one) for each input position
-    input_mask = tf.Variable(tf.ones((1, 32, 32, 1)))
+    input_mask = tf.Variable(tf.ones((1, 32, 32, 1), dtype=np.int8), dtype=np.int8)
     for x in range(32):
       for y in range(32):
         suitable_pattern_index = "1,"+str(x)+","+str(y)+",0"
         if suitable_pattern_index in input_image_options: 
           val = random.randint(0, len(input_image_options[suitable_pattern_index])-1) 
-          float32_value = np.float32((np.int8(int(input_image_options[suitable_pattern_index][val], 16)) - lenet5_in_zero_point) * lenet5_in_scale)
+          #float32_value = np.float32((np.int8(int(input_image_options[suitable_pattern_index][val], 16)) - lenet5_in_zero_point) * lenet5_in_scale)
+          value = np.int8(int(input_image_options[suitable_pattern_index][val], 16))
         else:
           last_pattern_multiplied_index = "1,"+str(random.randint(0, 27))+","+str(random.randint(0, 27))+",0"
           val = random.randint(0, len(input_image_options[last_pattern_multiplied_index])-1) 
-          float32_value = np.float32((np.int8(int(input_image_options[last_pattern_multiplied_index][val], 16)) - lenet5_in_zero_point) * lenet5_in_scale)
-        input_mask[0, x, y, 0].assign(float32_value)
+          #float32_value = np.float32((np.int8(int(input_image_options[last_pattern_multiplied_index][val], 16)) - lenet5_in_zero_point) * lenet5_in_scale)
+          value = np.int8(int(input_image_options[last_pattern_multiplied_index][val], 16))
+        input_mask[0, x, y, 0].assign(value)
 
     np.save(FWP_input_image_path, input_mask)
 
