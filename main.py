@@ -1,6 +1,7 @@
 from utils import load_model
 from utils import arg_parse
 from utils import create_output_directory
+from utils import print_npy_image
 
 from weights_management import save2file_model_weights
 from pairs_management import save2file_model_input_weight_pairs
@@ -56,6 +57,7 @@ def main(args):
     get_atpg_patterns_input_positions(args.model)
     print("\n~~~> "+args.model+" test patterns' input positions : GATHERED\n")
 
+  # generating custom input image
   if args.generate_custom_input_image:
     print("\n~~~> generate custom input image (mode: "+args.generate_custom_input_image+")...")
     generate_custom_input_image(args.generate_custom_input_image, args.model)
@@ -69,6 +71,12 @@ def main(args):
     else:
       manage_fault_injection_files(model, network, args.model, args.layer, args.input_tensor_path)
     print("\n~~~> Fault Injection files: GENERATED\n")
+
+  # print a tensor (.npy) as an image
+  if args.print_image:
+    print("\n~~~> printing image...\n")
+    print_npy_image(args.print_image)
+    print("\n~~~> image: PRINTED\n")
 
   print("\nexecution completed!\n")
   

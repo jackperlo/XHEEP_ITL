@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import argparse
 import os
+import matplotlib.pyplot as plt
 
 from constants import WEIGHTS_OUTPUT_PATH
 from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
@@ -98,6 +99,17 @@ def create_output_directory(weight_format):
   os.makedirs(OUTPUT_FI_FILES_PATH, exist_ok=True)
   os.makedirs(ATPG_PATTERNS_GATHERED_PATH, exist_ok=True)
 
+def print_npy_image(path):
+  """
+  Print a .npy file containing an input image
+
+  Args:
+    path (str): path where the tensor (.npy) is stored
+  """
+  input_data = np.load(path).reshape((1, 32, 32, 1))
+  plt.imshow(input_data[0], cmap='gray')
+  plt.show()
+
 def arg_parse():
   """
   Parse all the args passed to the main.
@@ -129,13 +141,16 @@ def arg_parse():
   parser.add_argument('--gather_patterns_input_positions', action='store_true', help='If this parameter is specified, then all the patterns\' suitable input positions are gathered')
 
   # argument related to generate custom input image
-  parser.add_argument('--generate_custom_input_image', help='Which kind of input image the system should generate. Default: FWP (Fill with pattern)', type=str, choices=["FWP"], default="FWP")
+  parser.add_argument('--generate_custom_input_image', help='Which kind of input image the system should generate. Default: FWP (Fill with pattern)', type=str, choices=["FWP"])
   
   # argument used to save all the files needed for the fault injection process
   parser.add_argument('--generate_FI_files', action='store_true', help='If this parameter is specified, then all the files needed for the fault injection phase are generated.')
   
   # argument used to specify the path of the input tensor of a given convolutional layer
   parser.add_argument('--input_tensor_path', help='If this parameter is specified, the FI generated files for the specified convolutional layer get the input tensor by the path specified in this argument', type=str)
+
+  # argument related to print a tensor as an image
+  parser.add_argument('--print_image', help='Print a tensor as an image. Specify the path as a string', type=str)
 
   parsed_args = parser.parse_args()
 
