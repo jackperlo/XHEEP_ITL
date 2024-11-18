@@ -55,6 +55,12 @@ def save_mul(target_layer, model_name, input_tensor_path=None):
     input_tensor = np.load(input_tensor_path) 
   weight_tensor = np.load(input_weight_tensor_path)
   
+  # input tensor shape and dtype checks
+  if input_tensor.shape != (1,32,32,1):
+    input_tensor = np.expand_dims(input_tensor, axis=0)
+  if input_tensor.dtype == np.float32:
+    input_tensor = input_tensor.astype(np.int8)
+  
   # loading multiplication indexes
   with open(input_mul_indexes_path, 'r') as mul_indexes_file:
     mul_indexes = json.load(mul_indexes_file)

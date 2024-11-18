@@ -67,12 +67,10 @@ def generate_pattern_filled_input_image(model_name):
         suitable_pattern_index = "1,"+str(x)+","+str(y)+",0"
         if suitable_pattern_index in input_image_options: 
           val = random.randint(0, len(input_image_options[suitable_pattern_index])-1) 
-          #float32_value = np.float32((np.int8(int(input_image_options[suitable_pattern_index][val], 16)) - lenet5_in_zero_point) * lenet5_in_scale)
           value = np.int8(int(input_image_options[suitable_pattern_index][val], 16))
         else:
           last_pattern_multiplied_index = "1,"+str(random.randint(0, 27))+","+str(random.randint(0, 27))+",0"
           val = random.randint(0, len(input_image_options[last_pattern_multiplied_index])-1) 
-          #float32_value = np.float32((np.int8(int(input_image_options[last_pattern_multiplied_index][val], 16)) - lenet5_in_zero_point) * lenet5_in_scale)
           value = np.int8(int(input_image_options[last_pattern_multiplied_index][val], 16))
         input_mask[0, x, y, 0].assign(value)
 
