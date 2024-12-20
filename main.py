@@ -2,6 +2,7 @@ from utils import load_model
 from utils import arg_parse
 from utils import create_output_directory
 from utils import print_npy_image
+from utils import print_help_menu
 
 from weights_management import save2file_model_weights
 from pairs_management import save2file_model_input_weight_pairs
@@ -16,6 +17,10 @@ from constants import MODELS
 from constants import PRETRAINED_MODEL_PATH
 
 def main(args):
+  if args.h:
+    print_help_menu()
+    return
+
   network, pretrained_model_name, target_layers, _, _= MODELS[args.model]
 
   model = load_model(path=PRETRAINED_MODEL_PATH+pretrained_model_name)

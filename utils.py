@@ -110,6 +110,22 @@ def print_npy_image(path):
   plt.imshow(input_data[0], cmap='gray')
   plt.show()
 
+def print_help_menu():
+  """
+  Print the help menu.
+  """
+  print('==============================================================================================================')
+  print('||                                        ITLs UTILITIES LIBRARY                                            ||')
+  print('==============================================================================================================')
+  print('$ python3 main.py --save_weights \n\t save to file the trained weights of the specified model and layer in the specified format (hex, bin, int8)\n')
+  print('$ python3 main.py --save_pairs \n\t save to file the <input, weight> pairs involved during the convolution algorithm of the specified model and convolutional layer\n')
+  print('$ python3 main.py --generate_atpg_scripts \n\t generate .tcl scripts for the ATPG process, one .tcl for each trained signed weight of the first convolutional layer\n')
+  print('$ python3 main.py --save_model_hex_format \n\t save the model in .hex (words/bytes) to run it into the X-HEEP platform running on the PYNQ-Z2 board\n')
+  print('$ python3 main.py --gather_patterns_input_positions \n\t collect, for all the test patterns, all the input positions which are multiplied for a given a weight which is, in turn, multiplied for a given test pattern\n')
+  print('$ python3 main.py --generate_FI_files \n\t collect itl-validation fault injection files\n')
+  print('$ python3 main.py --generate_custom_input_image \n\t generate a input image as specified by this parameter (e.g. FWP = fill with pattern)\n')
+  print('$ python3 main.py --print_image \n\t print a .png version of an input image stored as .npy tensor\n')
+
 def arg_parse():
   """
   Parse all the args passed to the main.
@@ -119,6 +135,9 @@ def arg_parse():
   """
   parser = argparse.ArgumentParser(description='Create a list of all the weights, the (input, weight) pairs, atpg scripts of a pre-trained model.')
   
+  # argument related to gather help menu
+  parser.add_argument('--h', action='store_true', help='If this parameter is specified, then the help menu will be displayed')
+
   # argument used to specify the used pre-trained model
   parser.add_argument('--model', help='CNN model to use. Default: lenet5', choices=MODELS.keys(), default="lenet5")
   # argument used to specify the used pre-trained model layer
