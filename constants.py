@@ -1,4 +1,5 @@
 from models.lenet import Lenet
+from models.alexnet import Alexnet
 
 # path to the pretrained models folder
 PRETRAINED_MODEL_PATH="./models/pretrained_models/"
@@ -21,7 +22,11 @@ MODELS = {
               "lenet5_int8_mnist.tflite", 
               ["conv1"]
             ],
-  "alexnet":[],
+  "alexnet":[
+              Alexnet(),
+              "alexnet_int8_cifar10.tflite",
+              ["conv1"]
+            ],
   "resnet50":[],
   "resnet152":[],
   "vgg16":[]         

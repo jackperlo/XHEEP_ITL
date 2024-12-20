@@ -22,7 +22,7 @@ def load_model(path):
 
   return interpreter
 
-def int8_to_binary(num):
+def int8_to_2c_binary32(num):
   """
   Convert a int8(:np.ndarray) number to its binary representation according to the IEEE-754 standard.
   
@@ -30,13 +30,13 @@ def int8_to_binary(num):
     the number to convert.
 
   Returns: 
-    a string containing the 32-bit binary representation.
+    a string containing the 32-bit 2c-binary representation.
   """
   if isinstance(num, np.ndarray):
     # If num is a NumPy array, convert to bin maintaining the sign
     binary_strings = []
     for x in num.flatten():
-      binary_rep = bin(x & 0xFF)[2:]
+      binary_rep = bin(int(x) & 0xFF)[2:] # Remove the '0b' prefix
       # Sign extension
       if (x < 0): # Negative values
         sign_extended = '1' * (32-len(binary_rep))
@@ -64,7 +64,7 @@ def int8_to_hex(num):
   """
   if isinstance(num, np.ndarray):
     hex_list = []
-    for val in int8_to_binary(num): 
+    for val in int8_to_2c_binary32(num): 
       # Convert binary string to integer, taking into account 2's complement
       if val[0] == '1':  # Negative number
           int_val = -((1 << len(val[:-1])) - int(val[:-1], 2))
@@ -134,7 +134,7 @@ def arg_parse():
   parser.add_argument('--h', action='store_true', help='If this parameter is specified, then the help menu will be displayed')
 
   # argument used to specify the used pre-trained model
-  parser.add_argument('--model', help='CNN model to use. Default: lenet5', choices=MODELS.keys(), default="lenet5")
+  parser.add_argument('--model', help='CNN model to use', choices=MODELS.keys(), default="alexnet")
   # argument used to specify the used pre-trained model layer
   parser.add_argument('--layer', help='CNN model layer of interest. Default: conv1', type=str, default="conv1")
 

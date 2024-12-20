@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
-from utils import int8_to_binary
+from utils import int8_to_2c_binary32
 from utils import int8_to_hex
 
 def save2file_model_weights(weight_format, model, network, target_layers, model_name):
@@ -37,7 +37,7 @@ def save2file_model_weights(weight_format, model, network, target_layers, model_
         if weight_format == 'int8':
           conversion_function = np.int8
         elif weight_format == 'binary':
-          conversion_function = int8_to_binary
+          conversion_function = int8_to_2c_binary32
         elif weight_format == 'hex':
           conversion_function = int8_to_hex
         else:
