@@ -3,6 +3,7 @@ This repositoy works as a utility library to successfully generate and validate 
 Note: to date [10/2024] an interpreter < "Python 3.12" must be used due to the lack of compatibility between Tensoflow Lite module and the latest version of the interpreter.
 
 Calling the main function, different functionalities can be chosen to be executed:
+ - `python3 main.py --h` -- print a "help" menu, specifying all the supported arguments
  - `python3 main.py --save_weights` -- save to file the trained weights of the specified model and layer in the specified format (hex, bin, int8)
  - `python3 main.py --save_pairs` -- save to file the <input, weight> pairs involved during the convolution algorithm of the specified model and convolutional layer
  - `python3 main.py --generate_atpg_scripts` -- generate .tcl scripts for the ATPG process, one .tcl for each trained signed weight of the first convolutional layer
