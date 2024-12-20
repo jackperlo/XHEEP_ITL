@@ -4,7 +4,7 @@ import argparse
 import os
 import matplotlib.pyplot as plt
 
-from constants import MODELS
+from utilities.constants import MODELS
 
 def load_model(path):
   """

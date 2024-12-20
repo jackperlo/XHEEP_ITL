@@ -1,20 +1,20 @@
-from utils import load_model
-from utils import arg_parse
-from utils import create_output_directory
-from utils import print_1ch_npy_image
-from utils import print_help_menu
+from utilities.constants import MODELS
+from utilities.constants import PRETRAINED_MODEL_PATH
 
-from weights_management import save2file_model_weights
-from pairs_management import save2file_model_input_weight_pairs
-from atpg_scripts_management import save2files_atpg_scripts
-from hex_model_management import save_model_in_hex_format_as_words
-from hex_model_management import save_model_in_hex_format_as_bytes
-from patterns_input_positions import get_atpg_patterns_input_positions
-from fault_injection_management import manage_fault_injection_files
-from custom_input_image_management import generate_custom_input_image
+from utilities.utils import load_model
+from utilities.utils import arg_parse
+from utilities.utils import create_output_directory
+from utilities.utils import print_1ch_npy_image
+from utilities.utils import print_help_menu
 
-from constants import MODELS
-from constants import PRETRAINED_MODEL_PATH
+from lib.weights_management import save2file_model_weights
+from lib.pairs_management import save2file_model_input_weight_pairs
+from lib.atpg_scripts_management import save2files_atpg_scripts
+from lib.hex_model_management import save_model_in_hex_format_as_words
+from lib.hex_model_management import save_model_in_hex_format_as_bytes
+from lib.patterns_input_positions import get_atpg_patterns_input_positions
+from lib.fault_injection_management import manage_fault_injection_files
+from lib.custom_input_image_management import generate_custom_input_image
 
 def main(args):
   if args.h:
