@@ -1,23 +1,21 @@
 import re
 import json
 
-from constants import ATPG_PATTERNS_GATHERED_PATH
-from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
 from constants import MODELS
 
 def get_atpg_patterns_input_positions(model_name):
   """
-    From the gathered patterns <T_p, W_i> the considered weight W_i which is multiplied for that pattern T_p is retrieved.
-    Given the weight W_i, all the input positions mulitplied for that W_i are collected and saved into a file
+    From the ATPG gathered patterns <T_p, W_i>, the considered weight W_i (which is multiplied for that pattern T_p) is retrieved.
+    Given the weight W_i, all the input positions mulitplied for that W_i are collected and saved into a file .json file.
 
     Args:
       model_name (str): name of the model being considered
   """
-  patterns_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns.txt"
-  input_weight_pairs_file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+MODELS[model_name][2][0]+"_input_weight_pairs.json"
-  patterns_all_possible_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_all_positions.json"
+  patterns_file_name = "./outputs/"+model_name+"/atpg_patterns_gathered/"+model_name+"_patterns.txt"
+  input_weight_pairs_file_name = "./outputs/"+model_name+"/input_weight_pairs/"+model_name+"_"+MODELS[model_name][2][0]+"_input_weight_pairs.json"
+  patterns_all_possible_positions_file_name = "./outputs/"+model_name+"/atpg_patterns_gathered/"+model_name+"_patterns_all_positions.json"
 
-  # open the patterns' file to get all the weight coordinates
+  # open the patterns file to get all the weight coordinates
   with open(patterns_file_name, "r") as patterns_file:
     matching_lines = dict()
 

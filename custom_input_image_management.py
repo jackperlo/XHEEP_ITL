@@ -4,22 +4,18 @@ import tensorflow as tf
 import random
 import numpy as np
 
-from constants import ATPG_PATTERNS_GATHERED_PATH
-from constants import INPUT_IMAGES_PATH
-
-from constants import lenet5_in_zero_point
-from constants import lenet5_in_scale
-
 def generate_custom_input_image(mode, model_name):
   """
-    Generate an input image based on the model under test
+    Generate an input image for the model and the mode passed as arguments.
+    * Note: FWP images are only built for LeNet-5 with tf.int8 type, so far (12/24) *
 
     Args:
       mode (str): which mode the input image must follow
       model_name (str): name of the model being considered
   """
-  if mode == "FWP":
-    generate_pattern_filled_input_image(model_name)
+  if mode == "FWP": # Fill With Patterns
+    if model_name == "lenet5":
+      generate_pattern_filled_input_image(model_name)
 
 def generate_pattern_filled_input_image(model_name):
   """
@@ -28,12 +24,12 @@ def generate_pattern_filled_input_image(model_name):
     Args:
       model_name (str): name of the model being considered
   """
-  patterns_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns.txt"
-  patterns_all_possible_positions_file_name = ATPG_PATTERNS_GATHERED_PATH+model_name+"_patterns_all_positions.json"
-  FWP_input_possibilities_file_name = INPUT_IMAGES_PATH+model_name+"_FWP_input_possibilities.json"
-  FWP_input_image_path = INPUT_IMAGES_PATH+model_name+"_FWP_input_image.npy"
+  patterns_file_name = "./outputs/"+model_name+"/atpg_patterns_gathered/"+model_name+"_patterns.txt"
+  patterns_all_possible_positions_file_name = "./outputs/"+model_name+"/atpg_patterns_gathered/"+model_name+"_patterns_all_positions.json"
+  FWP_input_possibilities_file_name = "./outputs/"+model_name+"/input_images/"+model_name+"_FWP_input_possibilities.json"
+  FWP_input_image_path = "./outputs/"+model_name+"/input_images/"+model_name+"_FWP_input_image.npy"
 
-  # open the patterns' file to get all the weight coordinates
+  # open the patterns file to get all the weight coordinates
   with open(patterns_file_name, "r") as patterns_file:
     input_image_options = dict() # e.g.: {input_1_0_0_0 => [pattern_1, pattern_2, pattern_3]}
     lines = dict()
@@ -44,9 +40,8 @@ def generate_pattern_filled_input_image(model_name):
       weight_coord = re.escape(weight_coord)
       ATPG_pattern_string = line.split(" ")[2]
       ATPG_pattern_hex = ATPG_binary_pattern_to_hex(ATPG_pattern_string)
-      #print(ATPG_pattern_string+" => "+ATPG_pattern_hex)
 
-      # for each weight coordinate check in the input/weight pairs if the weight coord is present
+      # for each weight coordinate check in the <input,weight> pair if the weight coord is present
       with open(patterns_all_possible_positions_file_name, "r") as pattern_positions_file:
         lines = json.load(pattern_positions_file)
      

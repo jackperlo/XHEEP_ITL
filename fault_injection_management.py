@@ -2,9 +2,6 @@ import numpy as np
 import tensorflow as tf
 import json
 
-from constants import WEIGHTS_OUTPUT_PATH
-from constants import OUTPUT_FI_FILES_PATH
-from constants import INPUT_IMAGES_PATH
 from constants import MODELS
 
 def manage_fault_injection_files(model: tf.lite.Interpreter, network, model_name, target_layer, input_tensor_path=None):
@@ -43,10 +40,10 @@ def save_mul(target_layer, model_name, input_tensor_path=None):
     0xFFFFFFB5 0xFFFFFFDF
     0xFFFFFFCD 0x00000019
   """
-  output_mults_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mults.txt"
-  input_mul_indexes_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_mul_indexes.json"
-  input_weight_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_weight_tensor.npy"
-  input_in_image_tensor_path = OUTPUT_FI_FILES_PATH+target_layer+"/"+model_name+"_"+target_layer+"_input_tensor.npy"
+  output_mults_path = "./outputs/"+model_name+"/FI_files/"+target_layer+"/"+model_name+"_"+target_layer+"_mults.txt"
+  input_mul_indexes_path = "./outputs/"+model_name+"/FI_files/"+target_layer+"/"+model_name+"_"+target_layer+"_mul_indexes.json"
+  input_weight_tensor_path = "./outputs/"+model_name+"/FI_files/"+target_layer+"/"+model_name+"_"+target_layer+"_weight_tensor.npy"
+  input_in_image_tensor_path = "./outputs/"+model_name+"/FI_files/"+target_layer+"/"+model_name+"_"+target_layer+"_input_tensor.npy"
 
   # loading tensors 
   if input_tensor_path is None:
@@ -102,7 +99,7 @@ def save_mul_indexes(model: tf.lite.Interpreter, network, layer, model_name):
       ...
     ]
   """
-  mul_indexes_path = OUTPUT_FI_FILES_PATH+layer+"/"+model_name+"_"+layer+"_mul_indexes.json"
+  mul_indexes_path = "./outputs/"+model_name+"/FI_files/"+layer+"/"+model_name+"_"+layer+"_mul_indexes.json"
   input_weight_pairs = dict()
 
   tensors = model.get_tensor_details()
@@ -177,8 +174,8 @@ def save_weight_as_tensor(model_name, target_layer):
       model_name (str): name of the model being considered
       target_layer (str): name of the layer being considered
   """
-  input_weight_file_path = WEIGHTS_OUTPUT_PATH+"_hex/"+model_name+"_"+target_layer+"_weights.txt"
-  output_weight_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_weight_tensor"
+  input_weight_file_path = "./outputs/"+model_name+"/weights_hex/"+model_name+"_"+target_layer+"_weights.txt"
+  output_weight_tensor_path = "./outputs/"+model_name+"/FI_files/"+model_name+"_"+target_layer+"_weight_tensor"
   
   # print the int8 weight tensor to file
   with(open(input_weight_file_path, 'r')) as input_weight_file:
@@ -198,8 +195,8 @@ def save_input_as_tensor(model_name, target_layer):
       model_name (str): name of the model being considered
       target_layer (str): name of the layer being considered
   """
-  input_in_image_file_path = INPUT_IMAGES_PATH+model_name+"_input_image.hex"
-  output_in_image_tensor_path = OUTPUT_FI_FILES_PATH+model_name+"_"+target_layer+"_input_tensor"
+  input_in_image_file_path = "./outputs/"+model_name+"/input_images/"+model_name+"_input_image.hex"
+  output_in_image_tensor_path = "./outputs/"+model_name+"/FI_files/"+model_name+"_"+target_layer+"_input_tensor"
   
   # print the int8 input tensor to file
   with(open(input_in_image_file_path, 'r')) as input_weight_file:

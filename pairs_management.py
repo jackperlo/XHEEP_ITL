@@ -1,8 +1,6 @@
 import tensorflow as tf
 import json
 
-from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
-
 def save2file_model_input_weight_pairs(model, network, target_layers, model_name):
   """
     Save the given model specified layers (input, weight) pairs for each output to file.
@@ -16,7 +14,7 @@ def save2file_model_input_weight_pairs(model, network, target_layers, model_name
   layer_input_weight_pairs = get_layers_input_weight_pairs(model, network, target_layers)
 
   for layer, input_weight_pairs in layer_input_weight_pairs.items():
-    file_name = INPUT_WEIGHT_PAIR_OUTPUT_PATH+"/"+model_name+"_"+layer+"_input_weight_pairs.json"
+    file_name = "./outputs/"+model_name+"/input_weight_pairs/"+model_name+"_"+layer+"_input_weight_pairs.json"
     with(open(file_name, 'w')) as output_file:
       json.dump(input_weight_pairs, output_file, indent=2)
 
@@ -57,7 +55,8 @@ def get_layers_input_weight_pairs(model: tf.lite.Interpreter, network, target_la
   for layer in target_layers:
     # get the operation index, strides and padding for by the specified layer 
     op_index, _, _ = network.get_conv_layer_details(layer)
-    strides = network.get_conv_layer_strides(layer)
+    # TODO: implement the case in which strides are not default ones
+    strides = network.get_conv_layer_strides(layer) 
     padding = network.get_conv_layer_padding(layer)
 
     # get the index of the input tensor, kernel tensor, bias tensor and output tensor
@@ -81,6 +80,8 @@ def get_layers_input_weight_pairs(model: tf.lite.Interpreter, network, target_la
     # get the pairs (input, weight) for each output feature map expected
     outputs = []
     n_mults = 0
+    # TODO: implement the channel_out of output tensor
+    # TODO: implement the case in which strides are not default ones
     for output_number in range(kernel_tensor_shape[0]): 
       for output_height in range(output_tensor_shape[1]):
         for output_width in range(output_tensor_shape[2]):

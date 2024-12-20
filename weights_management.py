@@ -1,7 +1,6 @@
 import tensorflow as tf
 import numpy as np
 
-from constants import WEIGHTS_OUTPUT_PATH
 from utils import int8_to_binary
 from utils import int8_to_hex
 
@@ -31,7 +30,7 @@ def save2file_model_weights(weight_format, model, network, target_layers, model_
     
   for layer, weights in layer_weight_list.items():
   
-    file_name = WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/"+model_name+"_"+layer+"_weights.txt"
+    file_name = "./outputs/"+model_name+"/weights_"+weight_format+"/"+model_name+"_"+layer+"_weights.txt"
     with(open(file_name, 'w')) as output_file:
 
       for weight in weights:

@@ -1,14 +1,14 @@
 from utils import load_model
 from utils import arg_parse
 from utils import create_output_directory
-from utils import print_npy_image
+from utils import print_1ch_npy_image
 from utils import print_help_menu
 
 from weights_management import save2file_model_weights
 from pairs_management import save2file_model_input_weight_pairs
 from atpg_scripts_management import save2files_atpg_scripts
-from trained_model_management import save_model_in_hex_format_as_words
-from trained_model_management import save_model_in_hex_format_as_bytes
+from hex_model_management import save_model_in_hex_format_as_words
+from hex_model_management import save_model_in_hex_format_as_bytes
 from patterns_input_positions import get_atpg_patterns_input_positions
 from fault_injection_management import manage_fault_injection_files
 from custom_input_image_management import generate_custom_input_image
@@ -21,11 +21,11 @@ def main(args):
     print_help_menu()
     return
 
-  network, pretrained_model_name, target_layers, _, _= MODELS[args.model]
+  network, pretrained_model_name, target_layers = MODELS[args.model]
 
   model = load_model(path=PRETRAINED_MODEL_PATH+pretrained_model_name)
   
-  create_output_directory(args.weight_format)
+  create_output_directory(args.weight_format, args.model)
 
   # save trained weights in the specified format
   if args.save_weights:
@@ -33,7 +33,7 @@ def main(args):
     save2file_model_weights(args.weight_format, model, network, target_layers, args.model)
     print("\n~~~> model weights: SAVED")
   
-  # save <input, weight> pairs of the specified convolutional layer(s) 
+  # save <input, weight> indexes pairs of the specified convolutional layer(s) 
   if args.save_pairs:
     print("\n~~~> saving (input, weight) pairs mode enabled...")
     save2file_model_input_weight_pairs(model, network, target_layers, args.model)
@@ -71,16 +71,16 @@ def main(args):
   # collect itl-validation fault injection files 
   if args.generate_FI_files:
     print("\n~~~> generating Fault Injection files...")
-    if args.input_tensor_path is None:
+    if args.input_tensor_path is None: # deprecated
       manage_fault_injection_files(model, network, args.model, args.layer)
-    else:
+    else: # deprecated
       manage_fault_injection_files(model, network, args.model, args.layer, args.input_tensor_path)
     print("\n~~~> Fault Injection files: GENERATED\n")
 
-  # print a tensor (.npy) as an image
+  # print a 1-channel(grey scale) tensor (.npy) as an image
   if args.print_image:
     print("\n~~~> printing image...\n")
-    print_npy_image(args.print_image)
+    print_1ch_npy_image(args.print_image)
     print("\n~~~> image: PRINTED\n")
 
   print("\nexecution completed!\n")

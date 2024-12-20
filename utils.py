@@ -4,13 +4,6 @@ import argparse
 import os
 import matplotlib.pyplot as plt
 
-from constants import WEIGHTS_OUTPUT_PATH
-from constants import INPUT_WEIGHT_PAIR_OUTPUT_PATH
-from constants import ATPG_SCRIPTS_OUTPUT_PATH
-from constants import OUTPUT_HEX_MODEL_PATH
-from constants import OUTPUT_FI_FILES_PATH
-from constants import ATPG_PATTERNS_GATHERED_PATH
-
 from constants import MODELS
 
 def load_model(path):
@@ -85,21 +78,23 @@ def int8_to_hex(num):
     print("Error: while trying to convert an int8 to hex; the int is not an instance of np.ndarray")
     exit(-1)
 
-def create_output_directory(weight_format):
+def create_output_directory(weight_format, model_name):
   """
   Create the output directories if it does not already exist.
 
   Args:
-    weight_format(string): weights saving format.
+    weight_format (string): weights saving format.
+    model_name (string): name of the CNN being used.
   """
-  os.makedirs(WEIGHTS_OUTPUT_PATH+"_"+weight_format+"/", exist_ok=True)
-  os.makedirs(INPUT_WEIGHT_PAIR_OUTPUT_PATH, exist_ok=True)
-  os.makedirs(ATPG_SCRIPTS_OUTPUT_PATH, exist_ok=True)
-  os.makedirs(OUTPUT_HEX_MODEL_PATH, exist_ok=True)
-  os.makedirs(OUTPUT_FI_FILES_PATH, exist_ok=True)
-  os.makedirs(ATPG_PATTERNS_GATHERED_PATH, exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/weights_"+weight_format+"/", exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/input_weight_pairs", exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/atpg_scripts/", exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/hex_models/", exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/atpg_patterns_gathered/", exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/input_images/", exist_ok=True)
+  os.makedirs("./outputs/"+model_name+"/FI_files/", exist_ok=True)
 
-def print_npy_image(path):
+def print_1ch_npy_image(path):
   """
   Print a .npy file containing an input image
 
@@ -124,7 +119,7 @@ def print_help_menu():
   print('$ python3 main.py --gather_patterns_input_positions \n\t collect, for all the test patterns, all the input positions which are multiplied for a given a weight which is, in turn, multiplied for a given test pattern\n')
   print('$ python3 main.py --generate_FI_files \n\t collect itl-validation fault injection files\n')
   print('$ python3 main.py --generate_custom_input_image \n\t generate a input image as specified by this parameter (e.g. FWP = fill with pattern)\n')
-  print('$ python3 main.py --print_image \n\t print a .png version of an input image stored as .npy tensor\n')
+  print('$ python3 main.py --print_image \n\t print a .png version of an input image stored as .npy 1-channel(grey scale) tensor\n')
 
 def arg_parse():
   """
